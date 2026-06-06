@@ -36,10 +36,10 @@ const PORT = process.env.PORT || 5000;
 
 // ─── Define allowed origins array ───
 const allowedOrigins = [
-  process.env.CLIENT_URL,
+  process.env.VITE_API_URL,
   "http://localhost:5173",
   "http://localhost:3000" // Added to match your active Vite layout environment setup
-].filter(Boolean); // Dynamically drops undefined values if CLIENT_URL is empty
+].filter(Boolean); // Dynamically drops undefined values if VITE_API_URL is empty
 
 // ─── Create HTTP server and Socket.IO ───
 const server = http.createServer(app);
