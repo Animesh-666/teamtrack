@@ -34,12 +34,12 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ─── Define allowed origins array ───
-// CHANGED: Now using CLIENT_URL (the Vercel frontend URL) for CORS
+// CLIENT_URL must be set in Render Environment Variables to: https://teamtrack-lake.vercel.app
 const allowedOrigins = [
-  process.env.CLIENT_URL, 
+  process.env.CLIENT_URL,
   "http://localhost:5173",
-  "http://localhost:3000" 
-].filter(Boolean); 
+  "http://localhost:3000"
+].filter(Boolean);
 
 // ─── Create HTTP server and Socket.IO ───
 const server = http.createServer(app);
@@ -64,8 +64,9 @@ app.use(
       if (!origin) return callback(null, true);
       
       if (allowedOrigins.indexOf(origin) === -1) {
-        const msg = `The CORS policy for this backend engine does not allow cross-origin requests from ${origin}.`;
-        return callback(new Error(msg), false);
+        // Log the blocked origin so you can debug in Render Logs if needed
+        console.warn(`Blocked CORS request from: ${origin}`);
+        return callback(new Error(`CORS policy does not allow access from ${origin}`), false);
       }
       return callback(null, true);
     },
@@ -75,11 +76,10 @@ app.use(
   })
 );
 
-// Body parsers
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-// Serve uploaded files statically
+// Serve uploaded files statically (Keep this, as your API needs to serve images/docs)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Attach Socket.IO instance to every request (req.io)
@@ -89,34 +89,21 @@ app.use((req, res, next) => {
 });
 
 // ═══════════════════════════════════════════════════════════
-//  Health Check
-// ═══════════════════════════════════════════════════════════
-app.get("/api/health", (req, res) => {
-  res.json({
-    status: "ok",
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    environment: process.env.NODE_ENV || "development",
-  });
-});
-
-// ═══════════════════════════════════════════════════════════
 //  API Routes
 // ═══════════════════════════════════════════════════════════
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", uptime: process.uptime() });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/notifications", notificationRoutes);
 
-// ═══════════════════════════════════════════════════════════
-//  Serve Frontend in Production (DISABLED: Frontend is now on Vercel)
-// ═══════════════════════════════════════════════════════════
+// Root route - simple welcome message
 app.get("/", (req, res) => {
-  res.json({
-    message: "TeamTrack API is running 🚀",
-    docs: "/api/health",
-  });
+  res.json({ message: "TeamTrack API is running 🚀" });
 });
 
 // ═══════════════════════════════════════════════════════════
@@ -126,23 +113,15 @@ app.use(notFound);
 app.use(errorHandler);
 
 // ═══════════════════════════════════════════════════════════
-//  Initialize Socket.IO Handlers
+//  Initialize Socket.IO & Start Server
 // ═══════════════════════════════════════════════════════════
 initializeSocket(io);
 
-// ═══════════════════════════════════════════════════════════
-//  Connect to MongoDB & Start Server
-// ═══════════════════════════════════════════════════════════
 const startServer = async () => {
   try {
     await connectDB();
-
     server.listen(PORT, () => {
-      console.log(`\n🚀 ═══════════════════════════════════════════════`);
-      console.log(`   TeamTrack Server running on port ${PORT}`);
-      console.log(`   Environment: ${process.env.NODE_ENV || "development"}`);
-      console.log(`   API:         http://localhost:${PORT}/api`);
-      console.log(`🚀 ═══════════════════════════════════════════════\n`);
+      console.log(`🚀 TeamTrack Backend running on port ${PORT}`);
     });
   } catch (error) {
     console.error("❌ Failed to start server:", error.message);
