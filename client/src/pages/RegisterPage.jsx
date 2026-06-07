@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import api from '../services/api'; // Correct path to your api client
+import api from '../services/api'; 
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -32,13 +32,11 @@ const RegisterPage = () => {
     try {
       const { confirmPassword, ...registerData } = data;
       
-      // Prepare payload
       const payload = {
         ...registerData,
         role: registerData.role.toUpperCase()
       };
 
-      // Direct API call using the corrected path
       await api.post('/auth/register', payload);
       
       toast.success('Account created successfully! Welcome aboard.', {
@@ -50,7 +48,7 @@ const RegisterPage = () => {
           border: '1px solid rgba(74, 222, 128, 0.2)',
         },
       });
-      navigate('/login'); // Redirect to login after success
+      navigate('/login'); 
     } catch (error) {
       toast.error(error?.response?.data?.message || 'Registration failed. Please try again.', {
         style: {
@@ -67,7 +65,6 @@ const RegisterPage = () => {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-[#0f172a] overflow-hidden py-8">
-      {/* Background decorations */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-600/20 blur-[120px]" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-600/20 blur-[120px]" />
@@ -84,7 +81,6 @@ const RegisterPage = () => {
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              {/* Full Name */}
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">Full Name</label>
                 <input
@@ -96,7 +92,6 @@ const RegisterPage = () => {
                 {errors.name && <p className="text-xs text-red-400 mt-1">{errors.name.message}</p>}
               </div>
 
-              {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">Email</label>
                 <input
@@ -108,7 +103,6 @@ const RegisterPage = () => {
                 {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email.message}</p>}
               </div>
 
-              {/* Role */}
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">Role</label>
                 <select
@@ -120,7 +114,6 @@ const RegisterPage = () => {
                 </select>
               </div>
 
-              {/* Password */}
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">Password</label>
                 <input
@@ -131,7 +124,6 @@ const RegisterPage = () => {
                 />
               </div>
 
-              {/* Confirm Password */}
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">Confirm Password</label>
                 <input
@@ -155,7 +147,6 @@ const RegisterPage = () => {
               </button>
             </form>
 
-            {/* THE MISSING LINK HAS BEEN ADDED HERE */}
             <div className="flex items-center gap-3 my-6">
               <div className="flex-1 h-px bg-slate-700/50" />
               <span className="text-xs text-slate-500 uppercase tracking-wider">Already a member?</span>
