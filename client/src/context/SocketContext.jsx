@@ -25,7 +25,7 @@ export const SocketProvider = ({ children }) => {
       return;
     }
 
-    const socket = io(import.meta.env.VITE_API_URL || "https://teamtrack-6xvb.onrender.com");
+   const socket = io(import.meta.env.VITE_API_URL || "https://teamtrack-6xvb.onrender.com");
 
     // Initialize socket connection
     const newSocket = io(socketUrl, {
