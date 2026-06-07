@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "api.get": "^1.6.8",
     "chart.js": "^4.4.2",
     "react": "^19.0.0",
     "react-chartjs-2": "^5.2.0",
