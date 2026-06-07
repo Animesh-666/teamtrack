@@ -4,12 +4,13 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-  "dev": "vite",
-  "build": "npx vite build",
-  "lint": "eslint . --ext js,jsx",
-  "preview": "vite preview"
-},
+    "dev": "vite",
+    "build": "npx vite build",
+    "lint": "eslint . --ext js,jsx",
+    "preview": "vite preview"
+  },
   "dependencies": {
+    "axios": "^1.17.0",
     "chart.js": "^4.4.2",
     "react": "^19.0.0",
     "react-chartjs-2": "^5.2.0",
