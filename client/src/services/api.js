@@ -1,6 +1,6 @@
 // Register.jsx (or Login.jsx)
 import { useState } from "react";
-import api from "../api/api"; // MAKE SURE THIS PATH IS CORRECT
+import something from "../api/api"; // MAKE SURE THIS PATH IS CORRECT
 
 const Register = () => {
   const [formData, setFormData] = useState({
