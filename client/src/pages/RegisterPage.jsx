@@ -67,7 +67,11 @@ const RegisterPage = () => {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-[#0f172a] overflow-hidden py-8">
-      {/* ... (Keep your existing background divs here) ... */}
+      {/* Background decorations */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-600/20 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-600/20 blur-[120px]" />
+      </div>
 
       <div className="relative z-10 w-full max-w-md mx-4 animate-fade-in-up">
         <div className="p-[1px] rounded-2xl bg-gradient-to-b from-blue-400/30 via-emerald-500/10 to-transparent">
@@ -139,6 +143,7 @@ const RegisterPage = () => {
                     validate: (val) => val === passwordValue || 'Passwords do not match'
                   })}
                 />
+                {errors.confirmPassword && <p className="text-xs text-red-400 mt-1">{errors.confirmPassword.message}</p>}
               </div>
 
               <button
@@ -149,6 +154,36 @@ const RegisterPage = () => {
                 {isLoading ? 'Creating...' : 'Create Account'}
               </button>
             </form>
+
+            {/* THE MISSING LINK HAS BEEN ADDED HERE */}
+            <div className="flex items-center gap-3 my-6">
+              <div className="flex-1 h-px bg-slate-700/50" />
+              <span className="text-xs text-slate-500 uppercase tracking-wider">Already a member?</span>
+              <div className="flex-1 h-px bg-slate-700/50" />
+            </div>
+
+            <div className="text-center">
+              <Link
+                to="/login"
+                className="inline-flex items-center gap-1.5 text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200 group"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-4 h-4 transform group-hover:-translate-x-0.5 transition-transform duration-200"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="19" y1="12" x2="5" y2="12" />
+                  <polyline points="12 19 5 12 12 5" />
+                </svg>
+                Sign in to your account
+              </Link>
+            </div>
+
           </div>
         </div>
       </div>
