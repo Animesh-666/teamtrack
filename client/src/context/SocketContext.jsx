@@ -16,6 +16,7 @@ export const SocketProvider = ({ children }) => {
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
+    // If no user is logged in, clean up the socket connection
     if (!user) {
       if (socket) {
         socket.disconnect();
@@ -25,10 +26,11 @@ export const SocketProvider = ({ children }) => {
       return;
     }
 
-   const socket = io(import.meta.env.VITE_API_URL || "https://teamtrack-6xvb.onrender.com");
+    // 🚀 FIXED: Renamed to SOCKET_URL so it doesn't clash with the state variable!
+    const SOCKET_URL = import.meta.env.VITE_API_URL || "https://teamtrack-6xvb.onrender.com";
 
-    // Initialize socket connection
-    const newSocket = io(socketUrl, {
+    // 🚀 FIXED: Passed SOCKET_URL instead of the undefined 'socketUrl'
+    const newSocket = io(SOCKET_URL, {
       auth: {
         token: localStorage.getItem("token")
       },
@@ -55,7 +57,8 @@ export const SocketProvider = ({ children }) => {
       newSocket.disconnect();
       setConnected(false);
     };
-  }, [user]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]); 
 
   return (
     <SocketContext.Provider value={{ socket, connected }}>
