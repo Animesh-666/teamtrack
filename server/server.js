@@ -11,7 +11,6 @@ import connectDB from "./config/db.js";
 
 // Middleware
 import { notFound, errorHandler } from "./middleware/errorHandler.js";
-//import { attachSocketIO } from "./middleware/upload.js";
 
 // Routes
 import authRoutes from "./routes/authRoutes.js";
@@ -35,11 +34,12 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ─── Define allowed origins array ───
+// CHANGED: Now using CLIENT_URL (the Vercel frontend URL) for CORS
 const allowedOrigins = [
-  process.env.VITE_API_URL,
+  process.env.CLIENT_URL, 
   "http://localhost:5173",
-  "http://localhost:3000" // Added to match your active Vite layout environment setup
-].filter(Boolean); // Dynamically drops undefined values if VITE_API_URL is empty
+  "http://localhost:3000" 
+].filter(Boolean); 
 
 // ─── Create HTTP server and Socket.IO ───
 const server = http.createServer(app);
@@ -58,11 +58,9 @@ const io = new SocketIOServer(server, {
 //  Global Middleware
 // ═══════════════════════════════════════════════════════════
 
-// CORS Configuration Engine
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow server-to-server or programmatic test payloads (like Postman or curl strings)
       if (!origin) return callback(null, true);
       
       if (allowedOrigins.indexOf(origin) === -1) {
@@ -112,24 +110,14 @@ app.use("/api/reports", reportRoutes);
 app.use("/api/notifications", notificationRoutes);
 
 // ═══════════════════════════════════════════════════════════
-//  Serve Frontend in Production
+//  Serve Frontend in Production (DISABLED: Frontend is now on Vercel)
 // ═══════════════════════════════════════════════════════════
-if (process.env.NODE_ENV === "production") {
-  const clientBuildPath = path.join(__dirname, "..", "client", "dist");
-  app.use(express.static(clientBuildPath));
-
-  // All non-API routes → React app
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(clientBuildPath, "index.html"));
+app.get("/", (req, res) => {
+  res.json({
+    message: "TeamTrack API is running 🚀",
+    docs: "/api/health",
   });
-} else {
-  app.get("/", (req, res) => {
-    res.json({
-      message: "TeamTrack API is running 🚀",
-      docs: "/api/health",
-    });
-  });
-}
+});
 
 // ═══════════════════════════════════════════════════════════
 //  Error Handling (must be LAST)
@@ -150,13 +138,10 @@ const startServer = async () => {
     await connectDB();
 
     server.listen(PORT, () => {
-      let runPort = PORT;
       console.log(`\n🚀 ═══════════════════════════════════════════════`);
-      console.log(`   TeamTrack Server running on port ${runPort}`);
+      console.log(`   TeamTrack Server running on port ${PORT}`);
       console.log(`   Environment: ${process.env.NODE_ENV || "development"}`);
-      console.log(`   API:         http://localhost:${runPort}/api`);
-      console.log(`   Health:      http://localhost:${runPort}/api/health`);
-      console.log(`   Socket.IO:   Enabled`);
+      console.log(`   API:         http://localhost:${PORT}/api`);
       console.log(`🚀 ═══════════════════════════════════════════════\n`);
     });
   } catch (error) {
@@ -166,31 +151,3 @@ const startServer = async () => {
 };
 
 startServer();
-
-// ─── Graceful shutdown ───
-process.on("SIGTERM", () => {
-  console.log("🛑 SIGTERM received. Shutting down gracefully...");
-  server.close(() => {
-    console.log("Server closed.");
-    process.exit(0);
-  });
-});
-
-process.on("SIGINT", () => {
-  console.log("🛑 SIGINT received. Shutting down gracefully...");
-  server.close(() => {
-    console.log("Server closed.");
-    process.exit(0);
-  });
-});
-
-process.on("unhandledRejection", (reason, promise) => {
-  console.error("⚠️ Unhandled Rejection at:", promise, "reason:", reason);
-});
-
-process.on("uncaughtException", (error) => {
-  console.error("⚠️ Uncaught Exception:", error);
-  process.exit(1);
-});
-
-export default app;
