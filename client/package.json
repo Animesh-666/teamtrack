@@ -4,11 +4,11 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
-  },
+  "dev": "vite",
+  "build": "npx vite build",
+  "lint": "eslint . --ext js,jsx",
+  "preview": "vite preview"
+},
   "dependencies": {
     "chart.js": "^4.4.2",
     "react": "^19.0.0",
