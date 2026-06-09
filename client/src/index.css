@@ -4,7 +4,8 @@
 
 @layer base {
   body {
-    @apply bg-[#0f172a] text-slate-200 antialiased font-sans;
+    /* 🚀 UPGRADED: Added dark: prefixes so the Theme Toggle changes the main background! */
+    @apply bg-slate-50 text-slate-900 dark:bg-[#0f172a] dark:text-slate-200 antialiased font-sans transition-colors duration-300;
   }
 }
 
