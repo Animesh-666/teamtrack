@@ -16,6 +16,9 @@ const router = express.Router();
 router.post("/register", register);
 router.post("/login", login);
 
+// Ensure this exists inside authRoutes.js
+router.post("/logout", logout);
+
 // Protected routes (require authentication)
 router.get("/profile", protect, getProfile);
 // 🚀 ADDED A FALLBACK ALIAS: Maps /auth/me to getProfile to satisfy authService.getMe()!
