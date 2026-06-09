@@ -1,26 +1,35 @@
 /**
  * ThemeContext.jsx
  * ─────────────────────────────────────────────────────────────
- * Manages light / dark theme states (defaulting to dark mode).
+ * Manages light / dark theme states with system preference detection.
  */
 
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 
 export const ThemeContext = createContext(null);
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
-    const saved = localStorage.getItem("theme");
-    return saved || "dark";
+    if (typeof window !== "undefined") {
+      // 1. Check if user has a saved preference
+      const saved = localStorage.getItem("theme");
+      if (saved) return saved;
+      
+      // 2. If no saved preference, check their system settings
+      const userMedia = window.matchMedia("(prefers-color-scheme: dark)");
+      if (userMedia.matches) return "dark";
+    }
+    // 3. Default fallback
+    return "dark";
   });
 
   useEffect(() => {
     const root = window.document.documentElement;
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
+    
+    // Remove both to be safe, then add the active one
+    root.classList.remove("light", "dark");
+    root.classList.add(theme);
+    
     localStorage.setItem("theme", theme);
   }, [theme]);
 
@@ -33,4 +42,13 @@ export const ThemeProvider = ({ children }) => {
       {children}
     </ThemeContext.Provider>
   );
+};
+
+// Custom hook to easily grab theme and toggleTheme in any component
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error("useTheme must be used within a ThemeProvider");
+  }
+  return context;
 };

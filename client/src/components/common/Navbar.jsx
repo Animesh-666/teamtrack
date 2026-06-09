@@ -4,11 +4,11 @@
  * Top navigation bar for the TeamTrack dashboard layout.
  *
  * Features:
- *  - Mobile hamburger toggle for the sidebar
- *  - Global search bar with keyboard shortcut hint
- *  - Notification bell with unread count badge
- *  - User avatar dropdown (profile / logout)
- *  - Glassmorphism + subtle border glow
+ * - Mobile hamburger toggle for the sidebar
+ * - Global search bar with keyboard shortcut hint
+ * - Notification bell with unread count badge
+ * - User avatar dropdown (profile / logout)
+ * - Glassmorphism + subtle border glow
  */
 
 import { useState, useRef, useEffect } from "react";
@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { useSocket } from "../../hooks/useSocket";
 import NotificationDropdown from "../notifications/NotificationDropdown";
+import ThemeToggle from './ThemeToggle';
 
 /* ── Icon helpers ─────────────────────────────────────────── */
 
@@ -286,12 +287,20 @@ const Navbar = ({ onMenuClick, sidebarOpen }) => {
                 </button>
               </div>
 
-              {/* Logout */}
-              <div className="border-t border-white/[0.06] pt-1">
+              {/* Appearance & Logout */}
+              <div className="border-t border-white/[0.06] pt-2 mt-2">
+                
+                {/* Theme Toggle Row */}
+                <div className="w-full flex items-center justify-between px-4 py-2">
+                  <span className="text-sm text-slate-300">Appearance</span>
+                  <ThemeToggle />
+                </div>
+
+                {/* Logout Button */}
                 <button
                   id="user-menu-logout"
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-2 mt-1 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
                 >
                   <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
