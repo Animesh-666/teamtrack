@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 🚀 Replaced @apply with standard CSS to prevent Vercel build crashes */
+/* Replaced @apply with standard CSS to prevent Vercel build crashes */
 body {
   background-color: #f8fafc;
   color: #0f172a;
@@ -18,18 +18,31 @@ body {
   color: #e2e8f0;
 }
 
-/* Glassmorphism panel styling utilities */
+/* ✨ UPGRADED: Glassmorphism utilities that adapt dynamically to Light & Dark themes */
 .glass-panel {
-  background: rgba(30, 41, 59, 0.7);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  transition: background 0.3s ease, border 0.3s ease;
 }
 
 .glass-card {
-  background: rgba(30, 41, 59, 0.4);
+  background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  transition: background 0.3s ease, border 0.3s ease;
+}
+
+/* Dark mode configurations for glass layers */
+.dark .glass-panel {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dark .glass-card {
+  background: rgba(30, 41, 59, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
@@ -63,10 +76,18 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 9999px;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+}
+
 ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
 }
