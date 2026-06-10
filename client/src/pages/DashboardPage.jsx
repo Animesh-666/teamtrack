@@ -42,28 +42,28 @@ const DashboardPage = () => {
   }, [user]);
 
   return (
-    <div className="min-h-screen bg-[#0f172a] px-4 py-8 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0f172a] px-4 py-8 sm:px-6 lg:px-8 transition-colors duration-300">
       {/* Page Header */}
       <div className="animate-fade-in-down mb-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           {/* Greeting Block */}
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            <h1 className="text-3xl font-bold tracking-tight text-slate-800 dark:text-white sm:text-4xl">
               {greeting},{' '}
-              <span className="bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-green-600 to-emerald-500 dark:from-green-400 dark:to-emerald-500 bg-clip-text text-transparent">
                 {user?.name || 'User'}
               </span>
               <span className="ml-1 inline-block origin-[70%_70%] animate-bounce">👋</span>
             </h1>
-            <p className="mt-1 text-sm text-slate-400">
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               Here&apos;s what&apos;s happening with your projects today.
             </p>
           </div>
 
           {/* Date & Time Block */}
-          <div className="flex items-center gap-3 rounded-xl border border-white/5 bg-[#1e293b]/60 px-5 py-3 backdrop-blur-xl">
+          <div className="flex items-center gap-3 rounded-xl border border-slate-200 dark:border-white/5 bg-white/90 dark:bg-[#1e293b]/60 px-5 py-3 backdrop-blur-xl shadow-sm dark:shadow-none transition-colors duration-300">
             <svg
-              className="h-5 w-5 text-green-400"
+              className="h-5 w-5 text-green-600 dark:text-green-400"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -76,8 +76,8 @@ const DashboardPage = () => {
               />
             </svg>
             <div>
-              <p className="text-sm font-medium text-white">{formattedDate}</p>
-              <p className="text-xs text-slate-400">{formattedTime}</p>
+              <p className="text-sm font-medium text-slate-800 dark:text-white">{formattedDate}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{formattedTime}</p>
             </div>
           </div>
         </div>
@@ -87,8 +87,8 @@ const DashboardPage = () => {
           <span
             className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
               isAdmin
-                ? 'border border-amber-500/20 bg-amber-500/10 text-amber-400'
-                : 'border border-green-500/20 bg-green-500/10 text-green-400'
+                ? 'border border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400'
+                : 'border border-green-500/20 bg-green-500/10 text-green-600 dark:text-green-400'
             }`}
           >
             {isAdmin ? (
