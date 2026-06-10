@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import AdminDashboard from '../components/dashboard/AdminDashboard';
 import MemberDashboard from '../components/dashboard/MemberDashboard';
-import ThemeToggle from '../components/ThemeToggle';
 
 const DashboardPage = () => {
   const { user } = useAuth();
