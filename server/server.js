@@ -22,6 +22,8 @@ import notificationRoutes from "./routes/notificationRoutes.js";
 // Socket
 import initializeSocket from "./socket/socketHandler.js";
 
+import userRoutes from './routes/userRoutes.js';
+
 // ─── Load environment variables ───
 dotenv.config();
 
@@ -96,6 +98,7 @@ app.get("/api/health", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use('/api/users', userRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/reports", reportRoutes);

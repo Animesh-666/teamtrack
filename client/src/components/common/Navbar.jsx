@@ -8,7 +8,7 @@
  * - Global search bar with keyboard shortcut hint
  * - Notification bell with unread count badge
  * - User avatar dropdown (profile / logout)
- * - Glassmorphism + subtle border glow
+ * - Glassmorphism + subtle border glow (Light/Dark Ready)
  */
 
 import { useState, useRef, useEffect } from "react";
@@ -119,9 +119,9 @@ const Navbar = ({ onMenuClick, sidebarOpen }) => {
       id="navbar"
       className={`
         sticky top-0 z-30 h-16 flex items-center justify-between px-4 lg:px-6
-        border-b border-white/[0.06]
-        bg-[#0b1120]/70 backdrop-blur-2xl
-        transition-all duration-300
+        bg-white/80 dark:bg-[#0b1120]/70 
+        border-b border-slate-200 dark:border-white/[0.06]
+        backdrop-blur-2xl transition-colors duration-300
       `}
     >
       {/* ── Left: hamburger + search ─────────────────────── */}
@@ -130,7 +130,7 @@ const Navbar = ({ onMenuClick, sidebarOpen }) => {
         <button
           id="mobile-menu-toggle"
           onClick={onMenuClick}
-          className="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors"
+          className="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-white/[0.06] transition-colors"
           aria-label="Toggle sidebar"
         >
           <MenuIcon className="w-5 h-5" />
@@ -138,7 +138,7 @@ const Navbar = ({ onMenuClick, sidebarOpen }) => {
 
         {/* Search bar */}
         <form onSubmit={handleSearchSubmit} className="hidden sm:flex items-center relative">
-          <SearchIcon className="absolute left-3 w-4 h-4 text-slate-500 pointer-events-none" />
+          <SearchIcon className="absolute left-3 w-4 h-4 text-slate-400 dark:text-slate-500 pointer-events-none" />
           <input
             id="navbar-search"
             type="text"
@@ -147,14 +147,16 @@ const Navbar = ({ onMenuClick, sidebarOpen }) => {
             placeholder="Search tasks, projects..."
             className="
               w-64 lg:w-80 h-10 pl-10 pr-16 rounded-xl
-              bg-white/[0.04] border border-white/[0.08]
-              text-sm text-slate-200 placeholder-slate-500
-              focus:outline-none focus:border-green-500/40 focus:ring-1 focus:ring-green-500/20
+              bg-slate-100 dark:bg-white/[0.04] 
+              border border-transparent dark:border-white/[0.08]
+              text-sm text-slate-900 dark:text-slate-200 
+              placeholder-slate-500
+              focus:outline-none focus:bg-white dark:focus:bg-white/[0.06] focus:border-green-500/40 focus:ring-1 focus:ring-green-500/20
               transition-all duration-200
             "
           />
           {/* Shortcut badge */}
-          <kbd className="absolute right-3 px-1.5 py-0.5 text-[10px] font-medium text-slate-500 bg-white/[0.06] border border-white/[0.08] rounded-md">
+          <kbd className="absolute right-3 px-1.5 py-0.5 text-[10px] font-medium text-slate-400 dark:text-slate-500 bg-slate-200 dark:bg-white/[0.06] rounded-md">
             ⌘K
           </kbd>
         </form>
@@ -169,12 +171,13 @@ const Navbar = ({ onMenuClick, sidebarOpen }) => {
             onClick={() => setShowNotifications((prev) => !prev)}
             className="
               relative flex items-center justify-center w-10 h-10 rounded-xl
-              text-slate-400 hover:text-white hover:bg-white/[0.06]
+              text-slate-500 hover:bg-slate-100 
+              dark:text-slate-400 dark:hover:text-white dark:hover:bg-white/[0.06]
               transition-colors duration-200
             "
             aria-label="Notifications"
           >
-            <BellIcon className={`w-5 h-5 ${showNotifications ? "text-green-400" : ""}`} />
+            <BellIcon className={`w-5 h-5 ${showNotifications ? "text-green-500 dark:text-green-400" : ""}`} />
 
             {/* Unread badge */}
             {unreadCount > 0 && (
@@ -200,7 +203,7 @@ const Navbar = ({ onMenuClick, sidebarOpen }) => {
         </div>
 
         {/* Divider */}
-        <div className="w-px h-8 bg-white/[0.06] mx-1" />
+        <div className="w-px h-8 bg-slate-200 dark:bg-white/[0.06] mx-1" />
 
         {/* User menu */}
         <div ref={userMenuRef} className="relative">
@@ -209,7 +212,7 @@ const Navbar = ({ onMenuClick, sidebarOpen }) => {
             onClick={() => setShowUserMenu((prev) => !prev)}
             className="
               flex items-center gap-2.5 pl-1 pr-2 py-1 rounded-xl
-              hover:bg-white/[0.04] transition-colors duration-200
+              hover:bg-slate-100 dark:hover:bg-white/[0.04] transition-colors duration-200
             "
           >
             {/* Avatar */}
@@ -227,7 +230,7 @@ const Navbar = ({ onMenuClick, sidebarOpen }) => {
 
             {/* Name (hidden on small screens) */}
             <div className="hidden md:block text-left">
-              <p className="text-sm font-medium text-white leading-tight truncate max-w-[120px]">
+              <p className="text-sm font-medium text-slate-800 dark:text-white leading-tight truncate max-w-[120px]">
                 {user?.name}
               </p>
               <p className="text-[10px] text-slate-500 uppercase tracking-wider font-medium">
@@ -237,7 +240,7 @@ const Navbar = ({ onMenuClick, sidebarOpen }) => {
 
             <ChevronDownIcon
               className={`
-                hidden md:block w-4 h-4 text-slate-500
+                hidden md:block w-4 h-4 text-slate-400 dark:text-slate-500
                 transition-transform duration-200
                 ${showUserMenu ? "rotate-180" : ""}
               `}
@@ -248,13 +251,14 @@ const Navbar = ({ onMenuClick, sidebarOpen }) => {
           {showUserMenu && (
             <div className="
               absolute right-0 mt-2 w-56 py-2
-              bg-[#1e293b]/95 backdrop-blur-xl
-              border border-white/[0.08] rounded-xl shadow-2xl shadow-black/40
-              animate-fade-in-up
+              bg-white dark:bg-[#1e293b]/95 
+              border border-slate-200 dark:border-white/[0.08] 
+              rounded-xl shadow-xl dark:shadow-2xl dark:shadow-black/40
+              backdrop-blur-xl animate-fade-in-up
             ">
               {/* User info header */}
-              <div className="px-4 py-2.5 border-b border-white/[0.06]">
-                <p className="text-sm font-semibold text-white truncate">{user?.name}</p>
+              <div className="px-4 py-2.5 border-b border-slate-100 dark:border-white/[0.06]">
+                <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{user?.name}</p>
                 <p className="text-xs text-slate-500 truncate">{user?.email}</p>
               </div>
 
@@ -263,7 +267,7 @@ const Navbar = ({ onMenuClick, sidebarOpen }) => {
                 <button
                   id="user-menu-profile"
                   onClick={() => { setShowUserMenu(false); navigate("/profile"); }}
-                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/[0.06] transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-white/[0.06] transition-colors"
                 >
                   <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -275,7 +279,7 @@ const Navbar = ({ onMenuClick, sidebarOpen }) => {
                 <button
                   id="user-menu-dashboard"
                   onClick={() => { setShowUserMenu(false); navigate("/dashboard"); }}
-                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/[0.06] transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-white/[0.06] transition-colors"
                 >
                   <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                     <rect x="3" y="3" width="7" height="7" rx="1" />
@@ -288,11 +292,11 @@ const Navbar = ({ onMenuClick, sidebarOpen }) => {
               </div>
 
               {/* Appearance & Logout */}
-              <div className="border-t border-white/[0.06] pt-2 mt-2">
+              <div className="border-t border-slate-100 dark:border-white/[0.06] pt-2 mt-2">
                 
                 {/* Theme Toggle Row */}
                 <div className="w-full flex items-center justify-between px-4 py-2">
-                  <span className="text-sm text-slate-300">Appearance</span>
+                  <span className="text-sm text-slate-600 dark:text-slate-300">Appearance</span>
                   <ThemeToggle />
                 </div>
 
@@ -300,7 +304,7 @@ const Navbar = ({ onMenuClick, sidebarOpen }) => {
                 <button
                   id="user-menu-logout"
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-2 mt-1 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-2 mt-1 text-sm text-red-500 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10 transition-colors"
                 >
                   <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
