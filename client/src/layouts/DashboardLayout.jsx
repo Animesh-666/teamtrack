@@ -26,7 +26,7 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#0f172a] text-slate-200 selection:bg-green-500/30 selection:text-white flex overflow-hidden">
+    <div className="relative min-h-screen bg-slate-50 dark:bg-[#0f172a] text-slate-800 dark:text-slate-200 selection:bg-green-500/30 selection:text-white flex overflow-hidden transition-colors duration-300">
       {/* Sidebar Navigation */}
       <Sidebar 
         isOpen={sidebarOpen} 

@@ -4,12 +4,12 @@
  * Primary navigation sidebar for the TeamTrack dashboard.
  *
  * Features:
- *  - Collapsible with smooth width transition
- *  - Role-based menu items (ADMIN vs MEMBER)
- *  - Active route highlighting with animated indicator
- *  - Glassmorphism card styling
- *  - User info panel at the bottom
- *  - Mobile-responsive overlay mode
+ * - Collapsible with smooth width transition
+ * - Role-based menu items (ADMIN vs MEMBER)
+ * - Active route highlighting with animated indicator
+ * - Glassmorphism card styling (Light/Dark Ready)
+ * - User info panel at the bottom
+ * - Mobile-responsive overlay mode
  */
 
 import { useState } from "react";
@@ -146,15 +146,15 @@ const Sidebar = ({ isOpen, onToggle, onCloseMobile }) => {
         id="sidebar"
         className={`
           fixed top-0 left-0 z-50 h-screen flex flex-col
-          border-r border-white/[0.06]
-          bg-[#0b1120]/80 backdrop-blur-2xl
+          border-r border-slate-200 dark:border-white/[0.06]
+          bg-white/80 dark:bg-[#0b1120]/80 backdrop-blur-2xl
           transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
           ${isOpen ? "w-64" : "w-20"}
           ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
         {/* ── Brand header ──────────────────────────────────── */}
-        <div className="flex items-center justify-between h-16 px-4 border-b border-white/[0.06]">
+        <div className="flex items-center justify-between h-16 px-4 border-b border-slate-200 dark:border-white/[0.06]">
           <div className="flex items-center gap-3 overflow-hidden">
             {/* Logo mark */}
             <div className="relative flex-shrink-0 w-9 h-9 rounded-lg bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/20">
@@ -165,12 +165,12 @@ const Sidebar = ({ isOpen, onToggle, onCloseMobile }) => {
             {/* Wordmark */}
             <span
               className={`
-                font-bold text-lg tracking-wide text-white whitespace-nowrap
+                font-bold text-lg tracking-wide text-slate-800 dark:text-white whitespace-nowrap
                 transition-opacity duration-200
                 ${isOpen ? "opacity-100" : "opacity-0 lg:opacity-0"}
               `}
             >
-              TEAM<span className="text-green-400">TRACK</span>
+              TEAM<span className="text-green-500 dark:text-green-400">TRACK</span>
             </span>
           </div>
 
@@ -178,7 +178,7 @@ const Sidebar = ({ isOpen, onToggle, onCloseMobile }) => {
           <button
             id="sidebar-toggle"
             onClick={onToggle}
-            className="hidden lg:flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors"
+            className="hidden lg:flex items-center justify-center w-8 h-8 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-white/[0.06] transition-colors"
             title={isOpen ? "Collapse sidebar" : "Expand sidebar"}
           >
             {isOpen ? (
@@ -205,8 +205,8 @@ const Sidebar = ({ isOpen, onToggle, onCloseMobile }) => {
                   font-medium text-sm transition-all duration-200
                   ${
                     isActive
-                      ? "text-green-400 bg-green-500/10"
-                      : "text-slate-400 hover:text-white hover:bg-white/[0.04]"
+                      ? "text-green-600 bg-green-50 dark:text-green-400 dark:bg-green-500/10"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-white/[0.04]"
                   }
                 `}
               >
@@ -214,14 +214,14 @@ const Sidebar = ({ isOpen, onToggle, onCloseMobile }) => {
                   <>
                     {/* Active indicator bar */}
                     {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-green-400 shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-green-500 dark:bg-green-400 shadow-[0_0_8px_rgba(34,197,94,0.3)] dark:shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
                     )}
 
                     <Icon
                       className={`
                         w-5 h-5 flex-shrink-0 transition-transform duration-200
                         ${hoveredItem === item.to ? "scale-110" : ""}
-                        ${isActive ? "drop-shadow-[0_0_6px_rgba(34,197,94,0.5)]" : ""}
+                        ${isActive ? "drop-shadow-[0_0_6px_rgba(34,197,94,0.3)] dark:drop-shadow-[0_0_6px_rgba(34,197,94,0.5)]" : ""}
                       `}
                     />
 
@@ -253,7 +253,7 @@ const Sidebar = ({ isOpen, onToggle, onCloseMobile }) => {
         </nav>
 
         {/* ── Divider ───────────────────────────────────────── */}
-        <div className="mx-4 border-t border-white/[0.06]" />
+        <div className="mx-4 border-t border-slate-200 dark:border-white/[0.06]" />
 
         {/* ── User info + logout ─────────────────────────────── */}
         <div className="p-3 space-y-2">
@@ -261,8 +261,9 @@ const Sidebar = ({ isOpen, onToggle, onCloseMobile }) => {
           <div
             className={`
               flex items-center gap-3 p-2 rounded-xl
-              bg-white/[0.03] border border-white/[0.06]
-              transition-all duration-200 cursor-pointer hover:bg-white/[0.06]
+              bg-slate-50 border border-slate-200 hover:bg-slate-100
+              dark:bg-white/[0.03] dark:border-white/[0.06] dark:hover:bg-white/[0.06]
+              transition-all duration-200 cursor-pointer
             `}
             onClick={() => { navigate("/profile"); onCloseMobile?.(); }}
           >
@@ -286,7 +287,7 @@ const Sidebar = ({ isOpen, onToggle, onCloseMobile }) => {
                 ${isOpen ? "opacity-100" : "opacity-0 lg:opacity-0 w-0"}
               `}
             >
-              <p className="text-sm font-semibold text-white truncate">{user?.name}</p>
+              <p className="text-sm font-semibold text-slate-800 dark:text-white truncate">{user?.name}</p>
               <p className="text-[11px] text-slate-500 uppercase tracking-wider font-medium">
                 {user?.role === "ADMIN" ? "Team Leader" : "Member"}
               </p>
@@ -299,8 +300,8 @@ const Sidebar = ({ isOpen, onToggle, onCloseMobile }) => {
             onClick={handleLogout}
             className={`
               group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl
-              text-sm font-medium text-slate-400
-              hover:text-red-400 hover:bg-red-500/10
+              text-sm font-medium text-slate-500 hover:text-red-500 hover:bg-red-50
+              dark:text-slate-400 dark:hover:text-red-400 dark:hover:bg-red-500/10
               transition-all duration-200
             `}
           >
