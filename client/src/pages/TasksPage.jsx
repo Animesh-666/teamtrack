@@ -63,12 +63,6 @@ const Icons = {
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
       <line x1="12" y1="2" x2="12" y2="6" />
       <line x1="12" y1="18" x2="12" y2="22" />
-      <line x1="4.93" y1="4.93" x2="7.76" y2="7.76" />
-      <line x1="16.24" y1="16.24" x2="19.07" y2="19.07" />
-      <line x1="2" y1="12" x2="6" y2="12" />
-      <line x1="18" y1="12" x2="22" y2="12" />
-      <line x1="4.93" y1="19.07" x2="7.76" y2="16.24" />
-      <line x1="16.24" y1="7.76" x2="19.07" y2="4.93" />
     </svg>
   ),
   Check: (props) => (
@@ -80,50 +74,38 @@ const Icons = {
 
 const SkeletonCard = ({ index }) => (
   <div
-    className="rounded-2xl overflow-hidden bg-[#1e293b]/40 border border-white/[0.04] animate-pulse"
+    className="rounded-2xl overflow-hidden bg-transparent border border-slate-200 dark:border-white/[0.04] animate-pulse"
     style={{ animationDelay: `${index * 80}ms` }}
   >
-    <div className="h-1 w-full bg-white/[0.04]" />
+    <div className="h-1 w-full bg-slate-200 dark:bg-white/[0.04]" />
     <div className="p-4 sm:p-5">
       <div className="flex items-center gap-2 mb-3">
-        <div className="w-16 h-5 rounded-md bg-white/[0.06]" />
-        <div className="w-20 h-5 rounded-md bg-white/[0.06]" />
+        <div className="w-16 h-5 rounded-md bg-slate-200 dark:bg-white/[0.06]" />
+        <div className="w-20 h-5 rounded-md bg-slate-200 dark:bg-white/[0.06]" />
       </div>
-      <div className="w-3/4 h-4 rounded bg-white/[0.06] mb-2" />
-      <div className="w-full h-3 rounded bg-white/[0.04] mb-1" />
-      <div className="w-2/3 h-3 rounded bg-white/[0.04] mb-4" />
-      <div className="mb-4">
-        <div className="flex justify-between mb-1">
-          <div className="w-12 h-2.5 rounded bg-white/[0.04]" />
-          <div className="w-8 h-2.5 rounded bg-white/[0.04]" />
-        </div>
-        <div className="w-full h-1.5 rounded-full bg-white/[0.04]" />
-      </div>
-      <div className="pt-3 border-t border-white/[0.04] flex justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-md bg-white/[0.06]" />
-          <div className="w-16 h-3 rounded bg-white/[0.04]" />
-        </div>
-        <div className="w-20 h-3 rounded bg-white/[0.04]" />
+      <div className="w-3/4 h-4 rounded bg-slate-200 dark:bg-white/[0.06] mb-2" />
+      <div className="w-full h-3 rounded bg-slate-100 dark:bg-white/[0.04] mb-1" />
+      <div className="pt-3 border-t border-slate-200 dark:border-white/[0.04] flex justify-between">
+        <div className="w-16 h-3 rounded bg-slate-100 dark:bg-white/[0.04]" />
       </div>
     </div>
   </div>
 );
 
-const StatBadge = ({ icon: Icon, label, value, color, bg }) => (
+const StatBadge = ({ icon: Icon, label, value, color, bg, border }) => (
   <div
     className={`
       flex items-center gap-2.5 px-4 py-2.5 rounded-xl
-      ${bg} border border-white/[0.04]
-      transition-all duration-200 hover:border-white/[0.08]
+      bg-transparent border ${border}
+      transition-all duration-200
     `}
   >
     <div className={`w-8 h-8 rounded-lg ${bg} flex items-center justify-center`}>
       <Icon className={`w-4 h-4 ${color}`} />
     </div>
     <div>
-      <p className="text-lg font-bold text-white tabular-nums leading-none mb-0.5">{value}</p>
-      <p className="text-[10px] text-slate-500 uppercase tracking-wider font-medium">{label}</p>
+      <p className="text-lg font-bold text-slate-900 dark:text-white tabular-nums leading-none mb-0.5">{value}</p>
+      <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider font-medium">{label}</p>
     </div>
   </div>
 );
@@ -336,13 +318,13 @@ const TasksPage = () => {
         <div className="animate-fade-in-down">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/25">
                   <Icons.CheckSquare className="w-5 h-5 text-white" />
                 </div>
                 Tasks
               </h1>
-              <p className="text-sm text-slate-400 mt-1 ml-[52px]">
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 ml-[52px]">
                 Manage and track all team tasks
               </p>
             </div>
@@ -353,8 +335,8 @@ const TasksPage = () => {
                 disabled={refreshing}
                 className="
                   w-10 h-10 rounded-xl flex items-center justify-center
-                  bg-white/[0.04] border border-white/[0.08]
-                  text-slate-400 hover:text-white hover:bg-white/[0.08]
+                  bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08]
+                  text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white
                   disabled:opacity-50 transition-all duration-200
                 "
                 title="Refresh tasks"
@@ -387,29 +369,33 @@ const TasksPage = () => {
               icon={Icons.CheckSquare}
               label="Total Tasks"
               value={stats.total}
-              color="text-slate-300"
-              bg="bg-white/[0.03]"
+              color="text-slate-700 dark:text-slate-300"
+              bg="bg-slate-100 dark:bg-white/[0.03]"
+              border="border-slate-200 dark:border-white/[0.04]"
             />
             <StatBadge
               icon={Icons.Clock}
               label="Pending"
               value={stats.pending}
-              color="text-amber-400"
+              color="text-amber-600 dark:text-amber-400"
               bg="bg-amber-500/[0.06]"
+              border="border-amber-200 dark:border-amber-500/20"
             />
             <StatBadge
               icon={Icons.Loader}
               label="In Progress"
               value={stats.inProgress}
-              color="text-blue-400"
+              color="text-blue-600 dark:text-blue-400"
               bg="bg-blue-500/[0.06]"
+              border="border-blue-200 dark:border-blue-500/20"
             />
             <StatBadge
               icon={Icons.Check}
               label="Completed"
               value={stats.completed}
-              color="text-green-400"
+              color="text-green-600 dark:text-green-400"
               bg="bg-green-500/[0.06]"
+              border="border-green-200 dark:border-green-500/20"
             />
           </div>
         </div>
@@ -424,7 +410,7 @@ const TasksPage = () => {
               loading={!!debouncedSearch && loading}
             />
 
-            <div className="flex items-center rounded-xl bg-white/[0.04] border border-white/[0.08] p-1">
+            <div className="flex items-center rounded-xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] p-1">
               <button
                 onClick={() => setViewMode("grid")}
                 className={`
@@ -432,8 +418,8 @@ const TasksPage = () => {
                   transition-all duration-200
                   ${
                     viewMode === "grid"
-                      ? "bg-green-500/15 text-green-400 shadow-sm"
-                      : "text-slate-500 hover:text-white"
+                      ? "bg-green-500/15 text-green-600 dark:text-green-400 shadow-sm"
+                      : "text-slate-500 hover:text-slate-800 dark:hover:text-white"
                   }
                 `}
                 title="Grid view"
@@ -447,8 +433,8 @@ const TasksPage = () => {
                   transition-all duration-200
                   ${
                     viewMode === "list"
-                      ? "bg-green-500/15 text-green-400 shadow-sm"
-                      : "text-slate-500 hover:text-white"
+                      ? "bg-green-500/15 text-green-600 dark:text-green-400 shadow-sm"
+                      : "text-slate-500 hover:text-slate-800 dark:hover:text-white"
                   }
                 `}
                 title="List view"
@@ -519,13 +505,13 @@ const TasksPage = () => {
               <div className="flex items-center justify-between mb-4">
                 <p className="text-xs text-slate-500">
                   Showing{" "}
-                  <span className="text-slate-300 font-medium">{filteredTasks.length}</span>{" "}
+                  <span className="text-slate-800 dark:text-slate-300 font-medium">{filteredTasks.length}</span>{" "}
                   task{filteredTasks.length !== 1 ? "s" : ""}
                   {debouncedSearch && (
                     <span>
                       {" "}
                       for{" "}
-                      <span className="text-green-400">"{debouncedSearch}"</span>
+                      <span className="text-green-600 dark:text-green-400">"{debouncedSearch}"</span>
                     </span>
                   )}
                 </p>

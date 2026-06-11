@@ -29,7 +29,7 @@ const SkeletonCard = () => (
       <div className="h-6 w-20 rounded-full bg-slate-200 dark:bg-slate-700/50" />
       <div className="flex -space-x-2">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="h-7 w-7 rounded-full bg-slate-300 dark:bg-slate-700 ring-2 ring-white dark:ring-[#1e293b]" />
+          <div key={i} className="h-7 w-7 rounded-full bg-slate-200 dark:bg-slate-700 ring-2 ring-white dark:ring-[#1e293b]" />
         ))}
       </div>
     </div>
@@ -39,7 +39,7 @@ const SkeletonCard = () => (
 
 const EmptyState = ({ hasFilters, onClear }) => (
   <div className="animate-fade-in-up col-span-full flex flex-col items-center justify-center py-20 text-center">
-    <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06]">
+    <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl border border-slate-200 dark:border-white/5 bg-transparent backdrop-blur-xl">
       <svg className="h-10 w-10 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path
           strokeLinecap="round"
@@ -59,7 +59,7 @@ const EmptyState = ({ hasFilters, onClear }) => (
     {hasFilters && (
       <button
         onClick={onClear}
-        className="rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1e293b] px-4 py-2 text-sm font-medium text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-[#1e293b]/80 transition-colors"
+        className="rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1e293b] px-4 py-2 text-sm font-medium text-slate-700 dark:text-white transition-colors hover:border-green-500/30"
       >
         Clear Filters
       </button>
@@ -95,12 +95,12 @@ const ConfirmDialog = ({ isOpen, title, message, onConfirm, onCancel, loading })
           <button
             onClick={onConfirm}
             disabled={loading}
-            className="flex-1 rounded-xl bg-red-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-600 disabled:opacity-50 flex items-center justify-center"
+            className="flex-1 rounded-xl bg-red-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-600 disabled:opacity-50"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
-                <svg className="h-4 w-4 animate-spin text-white" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={4} />
+                <svg className="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
                 Deleting…
@@ -218,7 +218,7 @@ const ProjectsPage = () => {
       <div className="animate-fade-in-down mb-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Projects</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-slate-950 dark:text-white">Projects</h1>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               Manage and track all your team projects in one place.
             </p>
@@ -239,7 +239,7 @@ const ProjectsPage = () => {
 
         <div className="mt-6 flex flex-wrap gap-3">
           {[
-            { label: 'Total', value: stats.total, color: 'text-slate-800 dark:text-white', bg: 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10' },
+            { label: 'Total', value: stats.total, color: 'text-slate-900 dark:text-white', bg: 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10' },
             { label: 'Active', value: stats.active, color: 'text-green-600 dark:text-green-400', bg: 'bg-green-500/10 border-green-500/20' },
             { label: 'Completed', value: stats.completed, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-500/10 border-blue-500/20' },
             { label: 'On Hold', value: stats.onHold, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' },
@@ -264,7 +264,7 @@ const ProjectsPage = () => {
             <button
               key={opt.value}
               onClick={() => setStatusFilter(opt.value)}
-              className={`rounded-lg px-4 py-2 text-xs font-medium transition-all ${statusFilter === opt.value ? 'bg-green-500/20 text-green-600 dark:text-green-400 ring-1 ring-green-500/30' : 'border border-slate-200 dark:border-white/5 bg-white/60 dark:bg-[#1e293b]/60 text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-white/10 hover:text-slate-800 dark:hover:text-white'}`}
+              className={`rounded-lg px-4 py-2 text-xs font-medium transition-all ${statusFilter === opt.value ? 'bg-green-500/20 text-green-600 dark:text-green-400 ring-1 ring-green-500/30' : 'border border-slate-200 dark:border-white/5 bg-white/60 dark:bg-[#1e293b]/60 text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-white/10 hover:text-slate-900 dark:hover:text-white'}`}
             >
               {opt.label}
             </button>
