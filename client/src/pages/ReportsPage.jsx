@@ -1,11 +1,9 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
 import { useAuth } from "../hooks/useAuth";
-
 import reportService from "../services/reportService";
 import projectService from "../services/projectService";
 import userService from "../services/userService";
-
 import ReportList from "../components/reports/ReportList";
 import ReportForm from "../components/reports/ReportForm";
 
@@ -16,7 +14,6 @@ const Icons = {
       <polyline points="14 2 14 8 20 8" />
       <line x1="16" y1="13" x2="8" y2="13" />
       <line x1="16" y1="17" x2="8" y2="17" />
-      <polyline points="10 9 9 9 8 9" />
     </svg>
   ),
   Plus: (props) => (
@@ -78,111 +75,27 @@ const Icons = {
   ),
 };
 
-const getDateRange = (preset) => {
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
-  switch (preset) {
-    case "today":
-      return {
-        startDate: today.toISOString().split("T")[0],
-        endDate: today.toISOString().split("T")[0],
-      };
-    case "week": {
-      const weekStart = new Date(today);
-      weekStart.setDate(today.getDate() - today.getDay());
-      return {
-        startDate: weekStart.toISOString().split("T")[0],
-        endDate: today.toISOString().split("T")[0],
-      };
-    }
-    case "month": {
-      const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-      return {
-        startDate: monthStart.toISOString().split("T")[0],
-        endDate: today.toISOString().split("T")[0],
-      };
-    }
-    default:
-      return { startDate: "", endDate: "" };
-  }
+const STAT_COLORS = {
+  blue: { bg: "bg-blue-500/10", border: "border-blue-200 dark:border-white/5", text: "text-blue-600 dark:text-blue-400" },
+  green: { bg: "bg-green-500/10", border: "border-green-200 dark:border-white/5", text: "text-green-600 dark:text-green-400" },
+  amber: { bg: "bg-amber-500/10", border: "border-amber-200 dark:border-white/5", text: "text-amber-600 dark:text-amber-400" }
 };
 
-const DATE_PRESETS = [
-  { key: "all", label: "All Time" },
-  { key: "today", label: "Today" },
-  { key: "week", label: "This Week" },
-  { key: "month", label: "This Month" },
-  { key: "custom", label: "Custom" },
-];
-
-const StatCard = ({ icon: Icon, label, value, subValue, color, bg }) => (
-  <div
-    className={`
-      flex items-center gap-3 px-4 py-3 rounded-xl
-      ${bg} border border-white/[0.04]
-      transition-all duration-200 hover:border-white/[0.08]
-    `}
-  >
-    <div className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center flex-shrink-0`}>
-      <Icon className={`w-5 h-5 ${color}`} />
+const StatCard = ({ icon: Icon, label, value, subValue, colorCode }) => {
+  const c = STAT_COLORS[colorCode] || STAT_COLORS.blue;
+  return (
+    <div className={`flex items-center gap-3 px-4 py-3 rounded-xl bg-transparent border border-slate-200 dark:border-white/[0.04] transition-all duration-200`}>
+      <div className={`w-10 h-10 rounded-xl ${c.bg} flex items-center justify-center flex-shrink-0`}>
+        <Icon className={`w-5 h-5 ${c.text}`} />
+      </div>
+      <div className="min-w-0">
+        <p className="text-xl font-bold text-slate-800 dark:text-white tabular-nums leading-none mb-0.5">{value}</p>
+        <p className="text-[10px] text-slate-500 uppercase tracking-wider font-medium">{label}</p>
+        {subValue && <p className={`text-[10px] ${c.text} font-medium mt-0.5`}>{subValue}</p>}
+      </div>
     </div>
-    <div className="min-w-0">
-      <p className="text-xl font-bold text-white tabular-nums leading-none mb-0.5">{value}</p>
-      <p className="text-[10px] text-slate-500 uppercase tracking-wider font-medium">{label}</p>
-      {subValue && (
-        <p className={`text-[10px] ${color} font-medium mt-0.5`}>{subValue}</p>
-      )}
-    </div>
-  </div>
-);
-
-const PageSkeleton = () => (
-  <div className="space-y-6">
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-      {[1, 2, 3].map((i) => (
-        <div
-          key={i}
-          className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.02] border border-white/[0.04] animate-pulse"
-        >
-          <div className="w-10 h-10 rounded-xl bg-white/[0.06]" />
-          <div className="space-y-1.5">
-            <div className="w-12 h-5 rounded bg-white/[0.06]" />
-            <div className="w-20 h-2.5 rounded bg-white/[0.04]" />
-          </div>
-        </div>
-      ))}
-    </div>
-
-    <div className="space-y-4">
-      {[1, 2, 3].map((i) => (
-        <div
-          key={i}
-          className="p-5 rounded-2xl bg-[#1e293b]/40 border border-white/[0.04] animate-pulse"
-          style={{ animationDelay: `${i * 100}ms` }}
-        >
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-9 h-9 rounded-lg bg-white/[0.06]" />
-            <div className="space-y-1.5">
-              <div className="w-32 h-3.5 rounded bg-white/[0.06]" />
-              <div className="w-20 h-2.5 rounded bg-white/[0.04]" />
-            </div>
-          </div>
-          <div className="flex gap-1 mb-3">
-            {Array.from({ length: 12 }).map((_, j) => (
-              <div key={j} className="h-1 flex-1 rounded-full bg-white/[0.04]" />
-            ))}
-          </div>
-          <div className="space-y-2">
-            <div className="w-full h-3 rounded bg-white/[0.04]" />
-            <div className="w-3/4 h-3 rounded bg-white/[0.04]" />
-            <div className="w-1/2 h-3 rounded bg-white/[0.04]" />
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
+  );
+};
 
 const ReportsPage = () => {
   const { user } = useAuth();
@@ -191,7 +104,6 @@ const ReportsPage = () => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-
   const [datePreset, setDatePreset] = useState("all");
   const [customStartDate, setCustomStartDate] = useState("");
   const [customEndDate, setCustomEndDate] = useState("");
@@ -200,28 +112,32 @@ const ReportsPage = () => {
 
   const [projects, setProjects] = useState([]);
   const [members, setMembers] = useState([]);
-
   const [showReportForm, setShowReportForm] = useState(false);
   const [editingReport, setEditingReport] = useState(null);
 
   const dateRange = useMemo(() => {
-    if (datePreset === "custom") {
-      return { startDate: customStartDate, endDate: customEndDate };
-    }
-    if (datePreset === "all") {
-      return { startDate: "", endDate: "" };
-    }
-    return getDateRange(datePreset);
+    if (datePreset === "custom") return { startDate: customStartDate, endDate: customEndDate };
+    if (datePreset === "all") return { startDate: "", endDate: "" };
+    const presetMap = {
+      today: () => {
+        const d = new Date(); d.setHours(0,0,0,0);
+        return { startDate: d.toISOString().split("T")[0], endDate: d.toISOString().split("T")[0] };
+      },
+      week: () => {
+        const d = new Date(); d.setDate(d.getDate() - d.getDay());
+        return { startDate: d.toISOString().split("T")[0], endDate: new Date().toISOString().split("T")[0] };
+      },
+      month: () => {
+        const d = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+        return { startDate: d.toISOString().split("T")[0], endDate: new Date().toISOString().split("T")[0] };
+      }
+    };
+    return presetMap[datePreset] ? presetMap[datePreset]() : { startDate: "", endDate: "" };
   }, [datePreset, customStartDate, customEndDate]);
 
   const fetchReports = useCallback(async (isRefresh = false) => {
     try {
-      if (isRefresh) {
-        setRefreshing(true);
-      } else {
-        setLoading(true);
-      }
-
+      if (isRefresh) setRefreshing(true); else setLoading(true);
       const params = {};
       if (dateRange.startDate) params.startDate = dateRange.startDate;
       if (dateRange.endDate) params.endDate = dateRange.endDate;
@@ -230,42 +146,23 @@ const ReportsPage = () => {
 
       const res = await reportService.getReports(params);
       setReports(res?.data || []);
-    } catch (error) {
-      console.error("Error fetching reports:", error);
+    } catch {
       toast.error("Failed to load reports");
     } finally {
-      setLoading(false);
-      setRefreshing(false);
+      setLoading(false); setRefreshing(false);
     }
   }, [dateRange, projectFilter, memberFilter]);
 
-  useEffect(() => {
-    fetchReports();
-  }, [fetchReports]);
+  useEffect(() => { fetchReports(); }, [fetchReports]);
 
   useEffect(() => {
-    const fetchProjects = async () => {
+    const loaderData = async () => {
       try {
-        const res = await projectService.getProjects();
-        setProjects(res?.data || []);
-      } catch (err) {
-        console.error("Error fetching projects:", err);
-      }
+        const pRes = await projectService.getProjects(); setProjects(pRes?.data || []);
+        if (isAdmin) { const mRes = await userService.getUsers(); setMembers(mRes?.data || []); }
+      } catch (err) { console.error(err); }
     };
-    fetchProjects();
-  }, []);
-
-  useEffect(() => {
-    if (!isAdmin) return;
-    const fetchMembers = async () => {
-      try {
-        const res = await userService.getUsers();
-        setMembers(res?.data || []);
-      } catch (err) {
-        console.error("Error fetching members:", err);
-      }
-    };
-    fetchMembers();
+    loaderData();
   }, [isAdmin]);
 
   const stats = useMemo(() => {
@@ -275,356 +172,88 @@ const ReportsPage = () => {
     return { totalReports, totalHours, avgHours };
   }, [reports]);
 
-  const activeFilterCount = useMemo(() => {
-    let count = 0;
-    if (datePreset !== "all") count++;
-    if (projectFilter) count++;
-    if (memberFilter) count++;
-    return count;
-  }, [datePreset, projectFilter, memberFilter]);
-
-  const handleRefresh = () => {
-    fetchReports(true);
-  };
-
-  const handleSubmitReport = () => {
-    setEditingReport(null);
-    setShowReportForm(true);
-  };
-
-  const handleEditReport = (report) => {
-    setEditingReport(report);
-    setShowReportForm(true);
-  };
-
-  const handleFormSuccess = () => {
-    fetchReports(true);
-  };
-
-  const handleResetFilters = () => {
-    setDatePreset("all");
-    setCustomStartDate("");
-    setCustomEndDate("");
-    setProjectFilter("");
-    setMemberFilter("");
-  };
-
   return (
     <div className="w-full h-full bg-transparent px-4 py-8 text-slate-800 dark:text-slate-200 transition-colors duration-300">
       <div className="max-w-5xl mx-auto space-y-6">
         <div className="animate-fade-in-down">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/25">
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
                   <Icons.FileText className="w-5 h-5 text-white" />
                 </div>
                 Daily Reports
               </h1>
-              <p className="text-sm text-slate-400 mt-1 ml-[52px]">
-                Track daily progress and hours logged
-              </p>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 ml-[52px]">Track daily progress and hours logged</p>
             </div>
 
             <div className="flex items-center gap-2">
-              <button
-                onClick={handleRefresh}
-                disabled={refreshing}
-                className="
-                  w-10 h-10 rounded-xl flex items-center justify-center
-                  bg-white/[0.04] border border-white/[0.08]
-                  text-slate-400 hover:text-white hover:bg-white/[0.08]
-                  disabled:opacity-50 transition-all duration-200
-                "
-                title="Refresh reports"
-              >
+              <button onClick={() => fetchReports(true)} disabled={refreshing} className="w-10 h-10 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all duration-200">
                 <Icons.Refresh className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
               </button>
-
-              <button
-                onClick={handleSubmitReport}
-                className="
-                  flex items-center gap-2 px-4 h-10 rounded-xl
-                  bg-gradient-to-r from-green-500 to-emerald-600
-                  text-sm font-semibold text-white
-                  shadow-lg shadow-green-500/25
-                  hover:shadow-xl hover:shadow-green-500/30
-                  hover:-translate-y-0.5 active:translate-y-0
-                  transition-all duration-200
-                "
-              >
-                <Icons.Plus className="w-4 h-4" />
-                Submit Report
+              <button onClick={() => { setEditingReport(null); setShowReportForm(true); }} className="flex items-center gap-2 px-4 h-10 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 text-sm font-semibold text-white shadow-lg shadow-green-500/25 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200">
+                <Icons.Plus className="w-4 h-4" /> Submit Report
               </button>
             </div>
           </div>
 
           {!loading && (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-              <StatCard
-                icon={Icons.FileText}
-                label="Total Reports"
-                value={stats.totalReports}
-                color="text-blue-400"
-                bg="bg-blue-500/[0.06]"
-              />
-              <StatCard
-                icon={Icons.Clock}
-                label="Hours Logged"
-                value={`${stats.totalHours}h`}
-                color="text-green-400"
-                bg="bg-green-500/[0.06]"
-              />
-              <StatCard
-                icon={Icons.BarChart}
-                label="Avg Hours"
-                value={`${stats.avgHours}h`}
-                subValue={
-                  parseFloat(stats.avgHours) >= 8
-                    ? "Great productivity!"
-                    : parseFloat(stats.avgHours) >= 5
-                    ? "Good pace"
-                    : undefined
-                }
-                color="text-amber-400"
-                bg="bg-amber-500/[0.06]"
-              />
+              <StatCard icon={Icons.FileText} label="Total Reports" value={stats.totalReports} colorCode="blue" />
+              <StatCard icon={Icons.Clock} label="Hours Logged" value={`${stats.totalHours}h`} colorCode="green" />
+              <StatCard icon={Icons.BarChart} label="Avg Hours" value={`${stats.avgHours}h`} subValue={parseFloat(stats.avgHours) >= 8 ? "Great productivity!" : undefined} colorCode="amber" />
             </div>
           )}
         </div>
 
         <div className="animate-fade-in-up">
-          <div
-            className="
-              p-4 rounded-2xl
-              bg-[#1e293b]/40 backdrop-blur-xl
-              border border-white/[0.06]
-            "
-          >
+          <div className="p-4 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] transition-colors duration-300">
             <div className="mb-4">
-              <label className="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-2">
-                Date Range
-              </label>
+              <label className="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-2">Date Range</label>
               <div className="flex flex-wrap gap-2">
                 {DATE_PRESETS.map((preset) => (
-                  <button
-                    key={preset.key}
-                    onClick={() => setDatePreset(preset.key)}
-                    className={`
-                      flex items-center gap-1.5 px-3 h-8 rounded-lg
-                      text-xs font-medium border transition-all duration-200
-                      ${
-                        datePreset === preset.key
-                          ? "bg-green-500/10 text-green-400 border-green-500/20 shadow-sm"
-                          : "bg-white/[0.02] text-slate-400 border-white/[0.06] hover:bg-white/[0.04] hover:text-white"
-                      }
-                    `}
-                  >
-                    {preset.key === "today" && <Icons.Calendar className="w-3 h-3" />}
+                  <button key={preset.key} onClick={() => setDatePreset(preset.key)} className={`flex items-center gap-1.5 px-3 h-8 rounded-lg text-xs font-medium border transition-all duration-200 ${datePreset === preset.key ? "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20" : "bg-slate-50 dark:bg-white/[0.02] text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/[0.06] hover:text-slate-800 dark:hover:text-white"}`}>
                     {preset.label}
                   </button>
                 ))}
               </div>
-
-              {datePreset === "custom" && (
-                <div className="flex flex-col sm:flex-row gap-3 mt-3 animate-fade-in">
-                  <div className="flex-1">
-                    <label className="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">
-                      Start Date
-                    </label>
-                    <input
-                      type="date"
-                      value={customStartDate}
-                      onChange={(e) => setCustomStartDate(e.target.value)}
-                      className="
-                        w-full h-10 px-3 rounded-lg
-                        bg-white/[0.04] border border-white/[0.08]
-                        text-sm text-slate-200
-                        focus:outline-none focus:border-green-500/40 focus:ring-1 focus:ring-green-500/20
-                        transition-all duration-200
-                        [color-scheme:dark]
-                      "
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <label className="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">
-                      End Date
-                    </label>
-                    <input
-                      type="date"
-                      value={customEndDate}
-                      onChange={(e) => setCustomEndDate(e.target.value)}
-                      className="
-                        w-full h-10 px-3 rounded-lg
-                        bg-white/[0.04] border border-white/[0.08]
-                        text-sm text-slate-200
-                        focus:outline-none focus:border-green-500/40 focus:ring-1 focus:ring-green-500/20
-                        transition-all duration-200
-                        [color-scheme:dark]
-                      "
-                    />
-                  </div>
-                </div>
-              )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1.5">
-                  Project
-                </label>
+                <label className="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1.5">Project</label>
                 <div className="relative">
-                  <Icons.Folder className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                  <select
-                    value={projectFilter}
-                    onChange={(e) => setProjectFilter(e.target.value)}
-                    className="
-                      w-full h-10 pl-9 pr-8 rounded-lg appearance-none
-                      bg-white/[0.04] border border-white/[0.08]
-                      text-sm text-slate-200
-                      focus:outline-none focus:border-green-500/40 focus:ring-1 focus:ring-green-500/20
-                      transition-all duration-200
-                    "
-                  >
-                    <option value="" className="bg-[#1e293b] text-slate-400">
-                      All Projects
-                    </option>
-                    {projects.map((p) => (
-                      <option key={p._id} value={p._id} className="bg-[#1e293b] text-slate-200">
-                        {p.projectName}
-                      </option>
-                    ))}
+                  <Icons.Folder className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
+                  <select value={projectFilter} onChange={(e) => setProjectFilter(e.target.value)} className="w-full h-10 pl-9 pr-8 rounded-lg appearance-none bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:border-green-500">
+                    <option value="" className="text-slate-500 dark:bg-[#1e293b]">All Projects</option>
+                    {projects.map((p) => <option key={p._id} value={p._id} className="dark:bg-[#1e293b]">{p.projectName || p.name}</option>)}
                   </select>
-                  <Icons.ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500 pointer-events-none" />
+                  <Icons.ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
                 </div>
               </div>
 
               {isAdmin && (
                 <div>
-                  <label className="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1.5">
-                    Member
-                  </label>
+                  <label className="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1.5">Member</label>
                   <div className="relative">
-                    <Icons.Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                    <select
-                      value={memberFilter}
-                      onChange={(e) => setMemberFilter(e.target.value)}
-                      className="
-                        w-full h-10 pl-9 pr-8 rounded-lg appearance-none
-                        bg-white/[0.04] border border-white/[0.08]
-                        text-sm text-slate-200
-                        focus:outline-none focus:border-green-500/40 focus:ring-1 focus:ring-green-500/20
-                        transition-all duration-200
-                      "
-                    >
-                      <option value="" className="bg-[#1e293b] text-slate-400">
-                        All Members
-                      </option>
-                      {members.map((m) => (
-                        <option key={m._id} value={m._id} className="bg-[#1e293b] text-slate-200">
-                          {m.name}
-                        </option>
-                      ))}
+                    <Icons.Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
+                    <select value={memberFilter} onChange={(e) => setMemberFilter(e.target.value)} className="w-full h-10 pl-9 pr-8 rounded-lg appearance-none bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:border-green-500">
+                      <option value="" className="text-slate-500 dark:bg-[#1e293b]">All Members</option>
+                      {members.map((m) => <option key={m._id} value={m._id} className="dark:bg-[#1e293b]">{m.name}</option>)}
                     </select>
-                    <Icons.ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500 pointer-events-none" />
+                    <Icons.ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
                   </div>
                 </div>
               )}
             </div>
-
-            {activeFilterCount > 0 && (
-              <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/[0.06]">
-                <div className="flex items-center gap-2 flex-wrap">
-                  {datePreset !== "all" && (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 h-7 rounded-lg bg-white/[0.06] border border-white/[0.08] text-xs text-slate-300">
-                      <span className="text-slate-500">Date:</span>
-                      <span className="text-green-400">
-                        {DATE_PRESETS.find((p) => p.key === datePreset)?.label}
-                      </span>
-                      <button
-                        onClick={() => {
-                          setDatePreset("all");
-                          setCustomStartDate("");
-                          setCustomEndDate("");
-                        }}
-                        className="ml-0.5 text-slate-500 hover:text-white transition-colors"
-                      >
-                        <Icons.X className="w-3 h-3" />
-                      </button>
-                    </span>
-                  )}
-                  {projectFilter && (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 h-7 rounded-lg bg-white/[0.06] border border-white/[0.08] text-xs text-slate-300">
-                      <span className="text-slate-500">Project:</span>
-                      <span className="text-green-400 truncate max-w-[120px]">
-                        {projects.find((p) => p._id === projectFilter)?.projectName || "Selected"}
-                      </span>
-                      <button
-                        onClick={() => setProjectFilter("")}
-                        className="ml-0.5 text-slate-500 hover:text-white transition-colors"
-                      >
-                        <Icons.X className="w-3 h-3" />
-                      </button>
-                    </span>
-                  )}
-                  {memberFilter && (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 h-7 rounded-lg bg-white/[0.06] border border-white/[0.08] text-xs text-slate-300">
-                      <span className="text-slate-500">Member:</span>
-                      <span className="text-green-400 truncate max-w-[120px]">
-                        {members.find((m) => m._id === memberFilter)?.name || "Selected"}
-                      </span>
-                      <button
-                        onClick={() => setMemberFilter("")}
-                        className="ml-0.5 text-slate-500 hover:text-white transition-colors"
-                      >
-                        <Icons.X className="w-3 h-3" />
-                      </button>
-                    </span>
-                  )}
-                </div>
-
-                <button
-                  onClick={handleResetFilters}
-                  className="
-                    text-xs font-medium text-slate-500 hover:text-red-400
-                    transition-colors duration-150 underline underline-offset-2 flex-shrink-0
-                  "
-                >
-                  Reset all
-                </button>
-              </div>
-            )}
           </div>
         </div>
 
-        <div className="animate-fade-in-up" style={{ animationDelay: "100ms" }}>
-          {loading && !refreshing && <PageSkeleton />}
-
-          {refreshing && (
-            <div className="flex items-center justify-center gap-2 py-3 mb-4 text-xs text-slate-500">
-              <div className="w-3.5 h-3.5 rounded-full border-2 border-slate-600 border-t-green-400 animate-spin" />
-              Refreshing reports...
-            </div>
-          )}
-
-          {!loading && (
-            <ReportList
-              reports={reports}
-              onEdit={handleEditReport}
-              loading={false}
-            />
-          )}
+        <div className="animate-fade-in-up">
+          <ReportList reports={reports} onEdit={handleEditReport} loading={loading} />
         </div>
 
-        <ReportForm
-          isOpen={showReportForm}
-          onClose={() => {
-            setShowReportForm(false);
-            setEditingReport(null);
-          }}
-          report={editingReport}
-          onSuccess={handleFormSuccess}
-        />
+        <ReportForm isOpen={showReportForm} onClose={() => { setShowReportForm(false); setEditingReport(null); }} report={editingReport} onSuccess={() => fetchReports(true)} />
       </div>
     </div>
   );

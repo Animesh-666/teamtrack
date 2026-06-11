@@ -107,14 +107,14 @@ const StatCard = ({
       onClick={onClick}
       className={`
         group relative p-5 rounded-2xl
-        bg-[#1e293b]/60 backdrop-blur-xl
-        border border-white/[0.06]
-        shadow-lg ${c.glow}
+        bg-transparent border border-slate-200 dark:border-white/[0.06]
+        text-slate-800 dark:text-slate-200
+        shadow-lg ${c?.glow || ''}
         hover:shadow-xl hover:border-white/[0.1]
         hover:-translate-y-0.5
         transition-all duration-300 ease-out
         ${onClick ? "cursor-pointer" : ""}
-        ${className}
+        ${className || ""}
       `}
     >
       {/* ── Ambient glow (top-right) ──────────────────────── */}
