@@ -170,16 +170,16 @@ const ProjectCard = ({
   return (
     <div
       id={`project-card-${project._id}`}
+      onClick={() => navigate(`/projects/${project._id}`)}
       className={`
         group relative p-5 rounded-2xl
-        bg-[#1e293b]/60 backdrop-blur-xl
-        border border-white/[0.06]
-        shadow-lg ${sc.glow}
-        hover:shadow-xl hover:border-white/[0.1]
-        hover:-translate-y-1
+        bg-transparent border border-slate-200 dark:border-white/[0.06]
+        text-slate-800 dark:text-slate-200
+        shadow-lg ${sc?.glow || ''}
+        hover:shadow-xl hover:border-slate-300 dark:hover:border-white/[0.1]
+        hover:-translate-y-0.5
         transition-all duration-300 ease-out
-        cursor-pointer
-        flex flex-col
+        cursor-pointer flex flex-col
       `}
       onClick={() => navigate(`/projects/${project._id}`)}
     >

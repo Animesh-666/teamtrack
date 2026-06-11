@@ -17,8 +17,6 @@ const Icons = {
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
       <circle cx="9" cy="7" r="4" />
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
     </svg>
   ),
   Sparkles: (props) => (
@@ -43,7 +41,6 @@ const Icons = {
   Crown: (props) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
       <path d="M2 4l3 12h14l3-12-6 7-4-9-4 9-6-7z" />
-      <path d="M5 16h14v2a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-2z" />
     </svg>
   ),
 };
@@ -55,42 +52,9 @@ const TIME_PERIODS = [
 ];
 
 const PODIUM_CONFIG = {
-  0: {
-    label: "1st Place",
-    medalEmoji: "🥇",
-    gradient: "from-amber-500/10 via-yellow-500/5 to-transparent",
-    border: "border-amber-500/30",
-    glow: "shadow-amber-500/5",
-    textColor: "text-amber-600 dark:text-amber-400",
-    ringColor: "ring-amber-500/40",
-    badgeBg: "bg-gradient-to-r from-amber-500 to-yellow-400",
-    badgeText: "text-white dark:text-[#0f172a]",
-    iconComponent: Icons.Crown,
-  },
-  1: {
-    label: "2nd Place",
-    medalEmoji: "🥈",
-    gradient: "from-slate-300/10 via-slate-400/5 to-transparent",
-    border: "border-slate-300/25",
-    glow: "shadow-slate-300/5",
-    textColor: "text-slate-600 dark:text-slate-300",
-    ringColor: "ring-slate-300/30",
-    badgeBg: "bg-gradient-to-r from-slate-400 to-slate-500",
-    badgeText: "text-white",
-    iconComponent: Icons.Trophy,
-  },
-  2: {
-    label: "3rd Place",
-    medalEmoji: "🥉",
-    gradient: "from-amber-700/10 via-amber-800/5 to-transparent",
-    border: "border-amber-700/25",
-    glow: "shadow-amber-700/5",
-    textColor: "text-amber-700 dark:text-amber-500",
-    ringColor: "ring-amber-700/30",
-    badgeBg: "bg-gradient-to-r from-amber-600 to-amber-800",
-    badgeText: "text-white",
-    iconComponent: Icons.Trophy,
-  },
+  0: { label: "1st Place", gradient: "from-amber-500/10 via-yellow-500/5 to-transparent", border: "border-amber-300 dark:border-amber-500/30", textColor: "text-amber-600 dark:text-amber-400", ringColor: "ring-amber-500/40", badgeBg: "bg-gradient-to-r from-amber-500 to-yellow-400", badgeText: "text-white dark:text-[#0f172a]", iconComponent: Icons.Crown },
+  1: { label: "2nd Place", gradient: "from-slate-300/10 via-slate-400/5 to-transparent", border: "border-slate-300 dark:border-slate-300/25", textColor: "text-slate-600 dark:text-slate-300", ringColor: "ring-slate-300/30", badgeBg: "bg-gradient-to-r from-slate-400 to-slate-500", badgeText: "text-white", iconComponent: Icons.Trophy },
+  2: { label: "3rd Place", gradient: "from-amber-700/10 via-amber-800/5 to-transparent", border: "border-amber-400 dark:border-amber-700/25", textColor: "text-amber-700 dark:text-amber-500", ringColor: "ring-amber-700/30", badgeBg: "bg-gradient-to-r from-amber-600 to-amber-800", badgeText: "text-white", iconComponent: Icons.Trophy },
 };
 
 const getInitials = (name) =>
@@ -98,45 +62,9 @@ const getInitials = (name) =>
 
 const nameToHue = (name) => {
   let hash = 0;
-  for (let i = 0; i < (name || "").length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  }
+  for (let i = 0; i < (name || "").length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
   return Math.abs(hash) % 360;
 };
-
-const PodiumSkeleton = () => (
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-    {[0, 1, 2].map((i) => (
-      <div key={i} className="relative p-6 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] animate-pulse">
-        <div className="flex flex-col items-center text-center space-y-3">
-          <div className="w-16 h-16 rounded-2xl bg-slate-200 dark:bg-white/[0.06]" />
-          <div className="w-24 h-4 rounded bg-slate-200 dark:bg-white/[0.06]" />
-          <div className="w-16 h-3 rounded bg-slate-100 dark:bg-white/[0.04]" />
-          <div className="flex gap-4 mt-2">
-            <div className="w-12 h-8 rounded bg-slate-100 dark:bg-white/[0.04]" />
-            <div className="w-12 h-8 rounded bg-slate-100 dark:bg-white/[0.04]" />
-          </div>
-        </div>
-      </div>
-    ))}
-  </div>
-);
-
-const StatsSkeleton = () => (
-  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-    {[0, 1, 2].map((i) => (
-      <div key={i} className="p-5 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] animate-pulse">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-white/[0.06]" />
-          <div className="space-y-1.5">
-            <div className="w-8 h-5 rounded bg-slate-200 dark:bg-white/[0.06]" />
-            <div className="w-20 h-2.5 rounded bg-slate-100 dark:bg-white/[0.04]" />
-          </div>
-        </div>
-      </div>
-    ))}
-  </div>
-);
 
 const LeaderboardPage = () => {
   const [members, setMembers] = useState([]);
@@ -147,8 +75,7 @@ const LeaderboardPage = () => {
     setLoading(true);
     try {
       const res = await userService.getLeaderboard({ period });
-      const data = res.data?.members || res.data || [];
-      setMembers(data);
+      setMembers(res.data?.members || res.data || []);
     } catch {
       toast.error("Failed to load leaderboard data");
     } finally {
@@ -156,9 +83,7 @@ const LeaderboardPage = () => {
     }
   }, []);
 
-  useEffect(() => {
-    fetchLeaderboard(timePeriod);
-  }, [timePeriod, fetchLeaderboard]);
+  useEffect(() => { fetchLeaderboard(timePeriod); }, [timePeriod, fetchLeaderboard]);
 
   const totalMembers = members.length;
   const totalTasks = members.reduce((sum, m) => sum + (m.completedTasks || 0), 0);
@@ -170,7 +95,7 @@ const LeaderboardPage = () => {
       <div className="mb-8 animate-fade-in-down">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500/20 to-yellow-500/10 border border-amber-500/20 flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500/20 to-yellow-500/10 border border-amber-500/20 flex items-center justify-center shadow-md">
               <Icons.Trophy className="w-6 h-6 text-amber-500 dark:text-amber-400" />
             </div>
             <div>
@@ -183,13 +108,8 @@ const LeaderboardPage = () => {
             {TIME_PERIODS.map((period) => {
               const isActive = timePeriod === period.key;
               return (
-                <button
-                  key={period.key}
-                  onClick={() => setTimePeriod(period.key)}
-                  className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${isActive ? "bg-white dark:bg-[#1e293b] text-slate-800 dark:text-white border border-slate-200 dark:border-white/[0.08] shadow-sm" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"}`}
-                >
-                  {isActive && <Icons.Calendar className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />}
-                  {period.label}
+                <button key={period.key} onClick={() => setTimePeriod(period.key)} className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all ${isActive ? "bg-white dark:bg-[#1e293b] text-slate-800 dark:text-white border border-slate-200 dark:border-white/[0.08] shadow-sm" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"}`}>
+                  {isActive && <Icons.Calendar className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />} {period.label}
                 </button>
               );
             })}
@@ -198,9 +118,7 @@ const LeaderboardPage = () => {
       </div>
 
       <div className="mb-8 animate-fade-in-up">
-        {loading ? (
-          <PodiumSkeleton />
-        ) : topThree.length > 0 ? (
+        {!loading && topThree.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {topThree.map((member, index) => {
               const config = PODIUM_CONFIG[index];
@@ -208,100 +126,42 @@ const LeaderboardPage = () => {
               const IconComp = config.iconComponent;
 
               return (
-                <div
-                  key={member._id || index}
-                  className={`group relative overflow-hidden p-6 rounded-2xl bg-gradient-to-br ${config.gradient} bg-transparent border border-slate-200 dark:border-white/[0.06] shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 ${index === 0 ? "md:order-2" : index === 1 ? "md:order-1" : "md:order-3"}`}
-                >
+                <div key={member._id || index} className={`group relative overflow-hidden p-6 rounded-2xl bg-gradient-to-br ${config.gradient} bg-transparent border ${config.border} shadow-sm transition-all duration-300 ${index === 0 ? "md:order-2" : index === 1 ? "md:order-1" : "md:order-3"}`}>
                   <div className="relative flex flex-col items-center text-center">
-                    <div className="flex items-center gap-1.5 mb-4">
-                      <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${config.badgeBg} ${config.badgeText}`}>
-                        <IconComp className="w-3 h-3" />
-                        {config.label}
-                      </span>
-                    </div>
-
+                    <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${config.badgeBg} ${config.badgeText} mb-3`}><IconComp className="w-3 h-3" />{config.label}</span>
                     {member.avatar ? (
-                      <img src={member.avatar} alt={member.name} className={`w-16 h-16 rounded-2xl object-cover mb-3 ring-3 ${config.ringColor} group-hover:scale-110 transition-transform duration-300`} />
+                      <img src={member.avatar} alt={member.name} className={`w-16 h-16 rounded-2xl object-cover mb-3 ring-3 ${config.ringColor}`} />
                     ) : (
-                      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-3 ring-3 ${config.ringColor} group-hover:scale-110 transition-transform duration-300`} style={{ background: `linear-gradient(135deg, hsl(${hue}, 60%, 45%), hsl(${hue + 30}, 50%, 35%))` }}>
-                        <span className="text-lg font-bold text-white">{getInitials(member.name)}</span>
-                      </div>
+                      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-3 ring-3 ${config.ringColor}`} style={{ background: `linear-gradient(135deg, hsl(${hue}, 60%, 45%), hsl(${hue + 30}, 50%, 35%))` }}><span className="text-lg font-bold text-white">{getInitials(member.name)}</span></div>
                     )}
-
-                    <h3 className="text-base font-bold text-slate-900 dark:text-white mb-0.5">{member.name}</h3>
-                    <p className="text-[11px] text-slate-400 capitalize mb-4">{member.role === "admin" ? "Team Leader" : "Team Member"}</p>
-
-                    <div className="flex items-center gap-6">
-                      <div className="text-center">
-                        <p className={`text-lg font-bold ${config.textColor} tabular-nums`}>{member.completedTasks || 0}</p>
-                        <p className="text-[10px] text-slate-500 uppercase tracking-wider font-medium">Tasks</p>
-                      </div>
+                    <h3 className="text-base font-bold text-slate-800 dark:text-white mb-0.5">{member.name}</h3>
+                    <div className="flex items-center gap-6 mt-4">
+                      <div className="text-center"><p className={`text-lg font-bold ${config.textColor}`}>{member.completedTasks || 0}</p><p className="text-[10px] text-slate-400 uppercase tracking-wider">Tasks</p></div>
                       <div className="w-px h-8 bg-slate-200 dark:bg-white/[0.08]" />
-                      <div className="text-center">
-                        <p className={`text-lg font-bold ${config.textColor} tabular-nums`}>{member.productivityScore || 0}</p>
-                        <p className="text-[10px] text-slate-500 uppercase tracking-wider font-medium">Score</p>
-                      </div>
-                      <div className="w-px h-8 bg-slate-200 dark:bg-white/[0.08]" />
-                      <div className="text-center">
-                        <p className={`text-lg font-bold ${config.textColor} tabular-nums`}>{member.hoursLogged || 0}h</p>
-                        <p className="text-[10px] text-slate-500 uppercase tracking-wider font-medium">Hours</p>
-                      </div>
+                      <div className="text-center"><p className={`text-lg font-bold ${config.textColor}`}>{member.productivityScore || 0}</p><p className="text-[10px] text-slate-400 uppercase tracking-wider">Score</p></div>
                     </div>
                   </div>
                 </div>
               );
             })}
           </div>
-        ) : null}
+        )}
       </div>
 
-      <div className="mb-8 animate-fade-in-up" style={{ animationDelay: "100ms" }}>
-        {loading ? (
-          <StatsSkeleton />
-        ) : (
+      <div className="mb-8 animate-fade-in-up">
+        {!loading && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="group relative p-5 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] shadow-sm hover:shadow-md transition-all duration-300">
-              <div className="relative flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-                  <Icons.Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-slate-800 dark:text-white tabular-nums">{totalMembers}</p>
-                  <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">Team Members</p>
-                </div>
+            {[{ label: "Team Members", value: totalMembers, icon: Icons.Users, c: "text-blue-600 dark:text-blue-400" }, { label: "Avg Productivity", value: `${avgScore}%`, icon: Icons.Sparkles, c: "text-green-600 dark:text-green-400" }, { label: "Tasks Completed", value: totalTasks, icon: Icons.TaskCheck, c: "text-purple-600 dark:text-purple-400" }].map((box, idx) => (
+              <div key={idx} className="p-5 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] shadow-sm flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/[0.04] flex items-center justify-center"><box.icon className={`w-5 h-5 ${box.c}`} /></div>
+                <div><p className="text-2xl font-bold text-slate-800 dark:text-white">{box.value}</p><p className="text-xs text-slate-400 font-medium uppercase tracking-wider">{box.label}</p></div>
               </div>
-            </div>
-
-            <div className="group relative p-5 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] shadow-sm hover:shadow-md transition-all duration-300">
-              <div className="relative flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center">
-                  <Icons.Sparkles className="w-5 h-5 text-green-600 dark:text-green-400" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-slate-800 dark:text-white tabular-nums">{avgScore}</p>
-                  <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">Avg Productivity</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="group relative p-5 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] shadow-sm hover:shadow-md transition-all duration-300">
-              <div className="relative flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
-                  <Icons.TaskCheck className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-slate-800 dark:text-white tabular-nums">{totalTasks}</p>
-                  <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">Tasks Completed</p>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         )}
       </div>
 
-      <div className="animate-fade-in-up" style={{ animationDelay: "200ms" }}>
-        <LeaderboardTable members={members} loading={loading} />
-      </div>
+      <div className="animate-fade-in-up"><LeaderboardTable members={members} loading={loading} /></div>
     </div>
   );
 };

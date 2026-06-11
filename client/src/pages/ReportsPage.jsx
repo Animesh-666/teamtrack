@@ -58,8 +58,6 @@ const Icons = {
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
       <circle cx="9" cy="7" r="4" />
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
     </svg>
   ),
   ChevronDown: (props) => (
@@ -75,27 +73,59 @@ const Icons = {
   ),
 };
 
-const STAT_COLORS = {
-  blue: { bg: "bg-blue-500/10", border: "border-blue-200 dark:border-white/5", text: "text-blue-600 dark:text-blue-400" },
-  green: { bg: "bg-green-500/10", border: "border-green-200 dark:border-white/5", text: "text-green-600 dark:text-green-400" },
-  amber: { bg: "bg-amber-500/10", border: "border-amber-200 dark:border-white/5", text: "text-amber-600 dark:text-amber-400" }
+const getDateRange = (preset) => {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  switch (preset) {
+    case "today":
+      return { startDate: today.toISOString().split("T")[0], endDate: today.toISOString().split("T")[0] };
+    case "week": {
+      const weekStart = new Date(today);
+      weekStart.setDate(today.getDate() - today.getDay());
+      return { startDate: weekStart.toISOString().split("T")[0], endDate: today.toISOString().split("T")[0] };
+    }
+    case "month": {
+      const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+      return { startDate: monthStart.toISOString().split("T")[0], endDate: today.toISOString().split("T")[0] };
+    }
+    default:
+      return { startDate: "", endDate: "" };
+  }
 };
 
-const StatCard = ({ icon: Icon, label, value, subValue, colorCode }) => {
-  const c = STAT_COLORS[colorCode] || STAT_COLORS.blue;
-  return (
-    <div className={`flex items-center gap-3 px-4 py-3 rounded-xl bg-transparent border border-slate-200 dark:border-white/[0.04] transition-all duration-200`}>
-      <div className={`w-10 h-10 rounded-xl ${c.bg} flex items-center justify-center flex-shrink-0`}>
-        <Icon className={`w-5 h-5 ${c.text}`} />
-      </div>
-      <div className="min-w-0">
-        <p className="text-xl font-bold text-slate-800 dark:text-white tabular-nums leading-none mb-0.5">{value}</p>
-        <p className="text-[10px] text-slate-500 uppercase tracking-wider font-medium">{label}</p>
-        {subValue && <p className={`text-[10px] ${c.text} font-medium mt-0.5`}>{subValue}</p>}
-      </div>
+const DATE_PRESETS = [
+  { key: "all", label: "All Time" },
+  { key: "today", label: "Today" },
+  { key: "week", label: "This Week" },
+  { key: "month", label: "This Month" },
+  { key: "custom", label: "Custom" },
+];
+
+const StatCard = ({ icon: Icon, label, value, subValue, color, bg }) => (
+  <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-transparent border border-slate-200 dark:border-white/[0.04] transition-all duration-200">
+    <div className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center flex-shrink-0`}>
+      <Icon className={`w-5 h-5 ${color}`} />
     </div>
-  );
-};
+    <div className="min-w-0">
+      <p className="text-xl font-bold text-slate-800 dark:text-white tabular-nums leading-none mb-0.5">{value}</p>
+      <p className="text-[10px] text-slate-500 uppercase tracking-wider font-medium">{label}</p>
+      {subValue && <p className={`text-[10px] ${color} font-medium mt-0.5`}>{subValue}</p>}
+    </div>
+  </div>
+);
+
+const PageSkeleton = () => (
+  <div className="space-y-6">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-transparent border border-slate-200 dark:border-white/[0.04] animate-pulse">
+          <div className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-white/[0.06]" />
+          <div className="space-y-1.5"><div className="w-12 h-5 rounded bg-slate-200 dark:bg-white/[0.06]" /><div className="w-20 h-2.5 rounded bg-slate-100 dark:bg-white/[0.04]" /></div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 const ReportsPage = () => {
   const { user } = useAuth();
@@ -118,21 +148,7 @@ const ReportsPage = () => {
   const dateRange = useMemo(() => {
     if (datePreset === "custom") return { startDate: customStartDate, endDate: customEndDate };
     if (datePreset === "all") return { startDate: "", endDate: "" };
-    const presetMap = {
-      today: () => {
-        const d = new Date(); d.setHours(0,0,0,0);
-        return { startDate: d.toISOString().split("T")[0], endDate: d.toISOString().split("T")[0] };
-      },
-      week: () => {
-        const d = new Date(); d.setDate(d.getDate() - d.getDay());
-        return { startDate: d.toISOString().split("T")[0], endDate: new Date().toISOString().split("T")[0] };
-      },
-      month: () => {
-        const d = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-        return { startDate: d.toISOString().split("T")[0], endDate: new Date().toISOString().split("T")[0] };
-      }
-    };
-    return presetMap[datePreset] ? presetMap[datePreset]() : { startDate: "", endDate: "" };
+    return getDateRange(datePreset);
   }, [datePreset, customStartDate, customEndDate]);
 
   const fetchReports = useCallback(async (isRefresh = false) => {
@@ -156,13 +172,13 @@ const ReportsPage = () => {
   useEffect(() => { fetchReports(); }, [fetchReports]);
 
   useEffect(() => {
-    const loaderData = async () => {
+    const fetchMetadata = async () => {
       try {
-        const pRes = await projectService.getProjects(); setProjects(pRes?.data || []);
-        if (isAdmin) { const mRes = await userService.getUsers(); setMembers(mRes?.data || []); }
+        const resP = await projectService.getProjects(); setProjects(resP?.data || []);
+        if (isAdmin) { const resM = await userService.getUsers(); setMembers(resM?.data || []); }
       } catch (err) { console.error(err); }
     };
-    loaderData();
+    fetchMetadata();
   }, [isAdmin]);
 
   const stats = useMemo(() => {
@@ -171,6 +187,10 @@ const ReportsPage = () => {
     const avgHours = totalReports > 0 ? (totalHours / totalReports).toFixed(1) : "0";
     return { totalReports, totalHours, avgHours };
   }, [reports]);
+
+  const activeFilterCount = useMemo(() => {
+    let count = 0; if (datePreset !== "all") count++; if (projectFilter) count++; if (memberFilter) count++; return count;
+  }, [datePreset, projectFilter, memberFilter]);
 
   return (
     <div className="w-full h-full bg-transparent px-4 py-8 text-slate-800 dark:text-slate-200 transition-colors duration-300">
@@ -186,37 +206,43 @@ const ReportsPage = () => {
               </h1>
               <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 ml-[52px]">Track daily progress and hours logged</p>
             </div>
-
             <div className="flex items-center gap-2">
-              <button onClick={() => fetchReports(true)} disabled={refreshing} className="w-10 h-10 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all duration-200">
-                <Icons.Refresh className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
-              </button>
-              <button onClick={() => { setEditingReport(null); setShowReportForm(true); }} className="flex items-center gap-2 px-4 h-10 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 text-sm font-semibold text-white shadow-lg shadow-green-500/25 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200">
-                <Icons.Plus className="w-4 h-4" /> Submit Report
-              </button>
+              <button onClick={() => fetchReports(true)} disabled={refreshing} className="w-10 h-10 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all"><Icons.Refresh className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} /></button>
+              <button onClick={() => { setEditingReport(null); setShowReportForm(true); }} className="flex items-center gap-2 px-4 h-10 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 text-sm font-semibold text-white shadow-lg"><Icons.Plus className="w-4 h-4" /> Submit Report</button>
             </div>
           </div>
 
           {!loading && (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-              <StatCard icon={Icons.FileText} label="Total Reports" value={stats.totalReports} colorCode="blue" />
-              <StatCard icon={Icons.Clock} label="Hours Logged" value={`${stats.totalHours}h`} colorCode="green" />
-              <StatCard icon={Icons.BarChart} label="Avg Hours" value={`${stats.avgHours}h`} subValue={parseFloat(stats.avgHours) >= 8 ? "Great productivity!" : undefined} colorCode="amber" />
+              <StatCard icon={Icons.FileText} label="Total Reports" value={stats.totalReports} color="text-blue-600 dark:text-blue-400" bg="bg-blue-500/[0.06]" />
+              <StatCard icon={Icons.Clock} label="Hours Logged" value={`${stats.totalHours}h`} color="text-green-600 dark:text-green-400" bg="bg-green-500/[0.06]" />
+              <StatCard icon={Icons.BarChart} label="Avg Hours" value={`${stats.avgHours}h`} subValue={parseFloat(stats.avgHours) >= 8 ? "Great productivity!" : undefined} color="text-amber-600 dark:text-amber-400" bg="bg-amber-500/[0.06]" />
             </div>
           )}
         </div>
 
         <div className="animate-fade-in-up">
-          <div className="p-4 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] transition-colors duration-300">
+          <div className="p-4 rounded-xl bg-transparent border border-slate-200 dark:border-white/[0.06] transition-colors duration-300">
             <div className="mb-4">
               <label className="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-2">Date Range</label>
               <div className="flex flex-wrap gap-2">
                 {DATE_PRESETS.map((preset) => (
-                  <button key={preset.key} onClick={() => setDatePreset(preset.key)} className={`flex items-center gap-1.5 px-3 h-8 rounded-lg text-xs font-medium border transition-all duration-200 ${datePreset === preset.key ? "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20" : "bg-slate-50 dark:bg-white/[0.02] text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/[0.06] hover:text-slate-800 dark:hover:text-white"}`}>
-                    {preset.label}
-                  </button>
+                  <button key={preset.key} onClick={() => setDatePreset(preset.key)} className={`flex items-center gap-1.5 px-3 h-8 rounded-lg text-xs font-medium border transition-all ${datePreset === preset.key ? "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20 shadow-sm" : "bg-slate-50 dark:bg-white/[0.02] text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/[0.06] hover:text-slate-800 dark:hover:text-white"}`}>{preset.label}</button>
                 ))}
               </div>
+
+              {datePreset === "custom" && (
+                <div className="flex flex-col sm:flex-row gap-3 mt-3 animate-fade-in">
+                  <div className="flex-1">
+                    <label className="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">Start Date</label>
+                    <input type="date" value={customStartDate} onChange={(e) => setCustomStartDate(e.target.value)} className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-sm text-slate-800 dark:text-slate-200 focus:outline-none [color-scheme:light] dark:[color-scheme:dark]" />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">End Date</label>
+                    <input type="date" value={customEndDate} onChange={(e) => setCustomEndDate(e.target.value)} className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-sm text-slate-800 dark:text-slate-200 focus:outline-none [color-scheme:light] dark:[color-scheme:dark]" />
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -224,7 +250,7 @@ const ReportsPage = () => {
                 <label className="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1.5">Project</label>
                 <div className="relative">
                   <Icons.Folder className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
-                  <select value={projectFilter} onChange={(e) => setProjectFilter(e.target.value)} className="w-full h-10 pl-9 pr-8 rounded-lg appearance-none bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:border-green-500">
+                  <select value={projectFilter} onChange={(e) => setProjectFilter(e.target.value)} className="w-full h-10 pl-9 pr-8 rounded-lg appearance-none bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-sm text-slate-800 dark:text-slate-200 focus:outline-none">
                     <option value="" className="text-slate-500 dark:bg-[#1e293b]">All Projects</option>
                     {projects.map((p) => <option key={p._id} value={p._id} className="dark:bg-[#1e293b]">{p.projectName || p.name}</option>)}
                   </select>
@@ -237,7 +263,7 @@ const ReportsPage = () => {
                   <label className="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1.5">Member</label>
                   <div className="relative">
                     <Icons.Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
-                    <select value={memberFilter} onChange={(e) => setMemberFilter(e.target.value)} className="w-full h-10 pl-9 pr-8 rounded-lg appearance-none bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:border-green-500">
+                    <select value={memberFilter} onChange={(e) => setMemberFilter(e.target.value)} className="w-full h-10 pl-9 pr-8 rounded-lg appearance-none bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-sm text-slate-800 dark:text-slate-200 focus:outline-none">
                       <option value="" className="text-slate-500 dark:bg-[#1e293b]">All Members</option>
                       {members.map((m) => <option key={m._id} value={m._id} className="dark:bg-[#1e293b]">{m.name}</option>)}
                     </select>
@@ -246,14 +272,20 @@ const ReportsPage = () => {
                 </div>
               )}
             </div>
+
+            {activeFilterCount > 0 && (
+              <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-200 dark:border-white/[0.06]">
+                <button onClick={handleResetFilters} className="text-xs font-medium text-slate-500 hover:text-red-500 dark:hover:text-red-400 underline transition-colors">Reset all filters</button>
+              </div>
+            )}
           </div>
         </div>
 
         <div className="animate-fade-in-up">
-          <ReportList reports={reports} onEdit={handleEditReport} loading={loading} />
+          {loading && !refreshing ? <PageSkeleton /> : <ReportList reports={reports} onEdit={handleEditReport} loading={false} />}
         </div>
 
-        <ReportForm isOpen={showReportForm} onClose={() => { setShowReportForm(false); setEditingReport(null); }} report={editingReport} onSuccess={() => fetchReports(true)} />
+        <ReportForm isOpen={showReportForm} onClose={() => { setShowReportForm(false); setEditingReport(null); }} report={editingReport} onSuccess={handleFormSuccess} />
       </div>
     </div>
   );
