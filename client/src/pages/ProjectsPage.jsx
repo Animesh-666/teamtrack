@@ -215,7 +215,7 @@ const ProjectsPage = () => {
   const hasActiveFilters = statusFilter !== 'all' || debouncedSearch.trim().length > 0;
 
   return (
-    <div className="min-h-screen bg-[#0f172a] px-4 py-8 sm:px-6 lg:px-8">
+    <div className="w-full h-full bg-transparent px-4 py-8 text-slate-800 dark:text-slate-200 transition-colors duration-300">
       <div className="animate-fade-in-down mb-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>

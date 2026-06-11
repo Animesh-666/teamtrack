@@ -4,13 +4,13 @@
  * Admin (Team Leader) dashboard view for TeamTrack.
  *
  * Displays:
- *  - Overview stat cards (projects, members, tasks, completion)
- *  - Task distribution pie chart
- *  - Member productivity bar chart
- *  - Weekly performance line chart
- *  - Recent activities feed
- *  - Top performers mini-leaderboard
- *  - Upcoming deadlines panel
+ * - Overview stat cards (projects, members, tasks, completion)
+ * - Task distribution pie chart
+ * - Member productivity bar chart
+ * - Weekly performance line chart
+ * - Recent activities feed
+ * - Top performers mini-leaderboard
+ * - Upcoming deadlines panel
  */
 
 import { useState, useEffect } from "react";
@@ -94,12 +94,12 @@ const Icons = {
 
 /* ── Activity type configs ────────────────────────────────── */
 const ACTIVITY_ICONS = {
-  task_created:  { color: "bg-blue-500/10 text-blue-400",   label: "Task Created" },
-  task_completed:{ color: "bg-green-500/10 text-green-400",  label: "Task Completed" },
-  task_updated:  { color: "bg-amber-500/10 text-amber-400",  label: "Task Updated" },
-  member_added:  { color: "bg-purple-500/10 text-purple-400", label: "Member Added" },
-  report_submitted: { color: "bg-cyan-500/10 text-cyan-400", label: "Report Submitted" },
-  project_created: { color: "bg-emerald-500/10 text-emerald-400", label: "Project Created" },
+  task_created:      { color: "bg-blue-500/10 text-blue-600 dark:text-blue-400",     label: "Task Created" },
+  task_completed:    { color: "bg-green-500/10 text-green-600 dark:text-green-400",   label: "Task Completed" },
+  task_updated:      { color: "bg-amber-500/10 text-amber-600 dark:text-amber-400",   label: "Task Updated" },
+  member_added:      { color: "bg-purple-500/10 text-purple-600 dark:text-purple-400", label: "Member Added" },
+  report_submitted:  { color: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400",     label: "Report Submitted" },
+  project_created:   { color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400", label: "Project Created" },
 };
 
 /* ── Helper: format relative time ─────────────────────────── */
@@ -287,28 +287,28 @@ const AdminDashboard = () => {
   /* ── Priority badge helper ──────────────────────────────── */
   const priorityBadge = (priority) => {
     const map = {
-      High:   "bg-red-500/10 text-red-400 border-red-500/20",
-      Medium: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-      Low:    "bg-blue-500/10 text-blue-400 border-blue-500/20",
+      High:   "bg-red-500/10 text-red-600 dark:text-red-400 border-red-200 dark:border-red-500/20",
+      Medium: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-500/20",
+      Low:    "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-500/20",
     };
     return map[priority] || map.Low;
   };
 
   /* ── Render ─────────────────────────────────────────────── */
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in text-slate-800 dark:text-slate-200">
       {/* ── Greeting header ─────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">
-            Welcome back, <span className="text-green-400">{user?.name?.split(" ")[0]}</span> 👋
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
+            Welcome back, <span className="text-green-600 dark:text-green-400">{user?.name?.split(" ")[0]}</span> 👋
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
             Here's what's happening with your team today.
           </p>
         </div>
-        <div className="flex items-center gap-2 text-xs text-slate-500">
-          <Icons.Calendar className="w-4 h-4" />
+        <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+          <Icons.Calendar className="w-4 h-4 text-slate-400 dark:text-slate-500" />
           {new Date().toLocaleDateString("en-US", {
             weekday: "long",
             year: "numeric",
@@ -365,31 +365,21 @@ const AdminDashboard = () => {
       {/* ── Charts row ──────────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Task Distribution Pie */}
-        <div className="
-          p-5 rounded-2xl
-          bg-[#1e293b]/60 backdrop-blur-xl
-          border border-white/[0.06]
-          shadow-lg
-        ">
+        <div className="p-5 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] shadow-sm dark:shadow-none transition-colors duration-300">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-white">Task Distribution</h3>
-            <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">Overview</span>
+            <h3 className="text-sm font-semibold text-slate-800 dark:text-white">Task Distribution</h3>
+            <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider">Overview</span>
           </div>
           <TaskDistributionChart data={taskDistribution} />
         </div>
 
         {/* Member Productivity Bar */}
-        <div className="
-          p-5 rounded-2xl
-          bg-[#1e293b]/60 backdrop-blur-xl
-          border border-white/[0.06]
-          shadow-lg
-        ">
+        <div className="p-5 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] shadow-sm dark:shadow-none transition-colors duration-300">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-white">Member Productivity</h3>
+            <h3 className="text-sm font-semibold text-slate-800 dark:text-white">Member Productivity</h3>
             <button
               onClick={() => navigate("/leaderboard")}
-              className="text-[10px] font-medium text-green-400 hover:text-green-300 uppercase tracking-wider transition-colors"
+              className="text-[10px] font-medium text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300 uppercase tracking-wider transition-colors"
             >
               View All
             </button>
@@ -398,15 +388,10 @@ const AdminDashboard = () => {
         </div>
 
         {/* Weekly Performance Line */}
-        <div className="
-          p-5 rounded-2xl
-          bg-[#1e293b]/60 backdrop-blur-xl
-          border border-white/[0.06]
-          shadow-lg
-        ">
+        <div className="p-5 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] shadow-sm dark:shadow-none transition-colors duration-300">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-white">Weekly Performance</h3>
-            <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">Last 7 Days</span>
+            <h3 className="text-sm font-semibold text-slate-800 dark:text-white">Weekly Performance</h3>
+            <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider">Last 7 Days</span>
           </div>
           <WeeklyPerformanceChart data={weeklyPerformance} />
         </div>
@@ -416,15 +401,10 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* ── Recent Activities ──────────────────────────────── */}
-        <div className="
-          lg:col-span-1 p-5 rounded-2xl
-          bg-[#1e293b]/60 backdrop-blur-xl
-          border border-white/[0.06]
-          shadow-lg
-        ">
+        <div className="lg:col-span-1 p-5 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] shadow-sm dark:shadow-none transition-colors duration-300">
           <div className="flex items-center justify-between mb-5">
-            <h3 className="text-sm font-semibold text-white">Recent Activities</h3>
-            <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">Live</span>
+            <h3 className="text-sm font-semibold text-slate-800 dark:text-white">Recent Activities</h3>
+            <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider">Live</span>
           </div>
 
           <div className="space-y-1 max-h-80 overflow-y-auto scrollbar-thin pr-1">
@@ -436,10 +416,7 @@ const AdminDashboard = () => {
                 return (
                   <div
                     key={activity._id || idx}
-                    className="
-                      flex items-start gap-3 p-3 rounded-xl
-                      hover:bg-white/[0.02] transition-colors duration-150
-                    "
+                    className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-white/[0.02] transition-colors duration-150"
                     style={{ animationDelay: `${idx * 50}ms` }}
                   >
                     {/* Icon dot */}
@@ -449,13 +426,13 @@ const AdminDashboard = () => {
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-slate-300 leading-relaxed line-clamp-2">
+                      <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed line-clamp-2">
                         {activity.message}
                       </p>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="text-[10px] text-slate-500">{activity.user}</span>
-                        <span className="text-[10px] text-slate-600">•</span>
-                        <span className="text-[10px] text-slate-500">{timeAgo(activity.time)}</span>
+                        <span className="text-[10px] text-slate-400 dark:text-slate-500">{activity.user}</span>
+                        <span className="text-[10px] text-slate-300 dark:text-slate-600">•</span>
+                        <span className="text-[10px] text-slate-400 dark:text-slate-500">{timeAgo(activity.time)}</span>
                       </div>
                     </div>
                   </div>
@@ -466,20 +443,15 @@ const AdminDashboard = () => {
         </div>
 
         {/* ── Top Performers ─────────────────────────────────── */}
-        <div className="
-          p-5 rounded-2xl
-          bg-[#1e293b]/60 backdrop-blur-xl
-          border border-white/[0.06]
-          shadow-lg
-        ">
+        <div className="p-5 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] shadow-sm dark:shadow-none transition-colors duration-300">
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2">
-              <Icons.Trophy className="w-4 h-4 text-amber-400" />
-              <h3 className="text-sm font-semibold text-white">Top Performers</h3>
+              <Icons.Trophy className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+              <h3 className="text-sm font-semibold text-slate-800 dark:text-white">Top Performers</h3>
             </div>
             <button
               onClick={() => navigate("/leaderboard")}
-              className="text-[10px] font-medium text-green-400 hover:text-green-300 uppercase tracking-wider transition-colors flex items-center gap-1"
+              className="text-[10px] font-medium text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300 uppercase tracking-wider transition-colors flex items-center gap-1"
             >
               Leaderboard <Icons.ArrowRight className="w-3 h-3" />
             </button>
@@ -494,24 +466,20 @@ const AdminDashboard = () => {
                 return (
                   <div
                     key={idx}
-                    className="
-                      flex items-center gap-3 p-3 rounded-xl
-                      bg-white/[0.02] border border-white/[0.04]
-                      hover:bg-white/[0.04] transition-colors duration-150
-                    "
+                    className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200/60 hover:bg-slate-100 dark:bg-white/[0.02] dark:border-white/[0.04] dark:hover:bg-white/[0.04] transition-colors duration-150"
                   >
                     {/* Rank */}
-                    <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-slate-200/50 dark:bg-white/[0.04] flex items-center justify-center">
                       {idx < 3 ? (
                         <span className="text-base">{medals[idx]}</span>
                       ) : (
-                        <span className="text-xs font-bold text-slate-500">#{idx + 1}</span>
+                        <span className="text-xs font-bold text-slate-400 dark:text-slate-500">#{idx + 1}</span>
                       )}
                     </div>
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-white truncate">{performer.name}</p>
+                      <p className="text-sm font-medium text-slate-800 dark:text-white truncate">{performer.name}</p>
                       <p className="text-[10px] text-slate-500">
                         {performer.completed}/{performer.assigned} tasks
                       </p>
@@ -521,7 +489,7 @@ const AdminDashboard = () => {
                     <div className="flex-shrink-0 text-right">
                       <span className={`
                         text-sm font-bold tabular-nums
-                        ${performer.score >= 80 ? "text-green-400" : performer.score >= 50 ? "text-amber-400" : "text-red-400"}
+                        ${performer.score >= 80 ? "text-green-600 dark:text-green-400" : performer.score >= 50 ? "text-amber-600 dark:text-amber-400" : "text-red-600 dark:text-red-400"}
                       `}>
                         {performer.score}%
                       </span>
@@ -534,20 +502,15 @@ const AdminDashboard = () => {
         </div>
 
         {/* ── Upcoming Deadlines ──────────────────────────────── */}
-        <div className="
-          p-5 rounded-2xl
-          bg-[#1e293b]/60 backdrop-blur-xl
-          border border-white/[0.06]
-          shadow-lg
-        ">
+        <div className="p-5 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] shadow-sm dark:shadow-none transition-colors duration-300">
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2">
-              <Icons.Calendar className="w-4 h-4 text-red-400" />
-              <h3 className="text-sm font-semibold text-white">Upcoming Deadlines</h3>
+              <Icons.Calendar className="w-4 h-4 text-red-500 dark:text-red-400" />
+              <h3 className="text-sm font-semibold text-slate-800 dark:text-white">Upcoming Deadlines</h3>
             </div>
             <button
               onClick={() => navigate("/tasks")}
-              className="text-[10px] font-medium text-green-400 hover:text-green-300 uppercase tracking-wider transition-colors flex items-center gap-1"
+              className="text-[10px] font-medium text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300 uppercase tracking-wider transition-colors flex items-center gap-1"
             >
               All Tasks <Icons.ArrowRight className="w-3 h-3" />
             </button>
@@ -560,44 +523,33 @@ const AdminDashboard = () => {
               upcomingDeadlines.map((task) => (
                 <div
                   key={task._id}
-                  className="
-                    p-3 rounded-xl
-                    bg-white/[0.02] border border-white/[0.04]
-                    hover:bg-white/[0.04] transition-colors duration-150
-                    cursor-pointer
-                  "
+                  className="p-3 rounded-xl bg-slate-50 border border-slate-200/60 hover:bg-slate-100 dark:bg-white/[0.02] dark:border-white/[0.04] dark:hover:bg-white/[0.04] transition-colors duration-150 cursor-pointer"
                   onClick={() => navigate(`/tasks?id=${task._id}`)}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-white truncate">{task.title}</p>
+                      <p className="text-sm font-medium text-slate-800 dark:text-white truncate">{task.title}</p>
                       <p className="text-[10px] text-slate-500 mt-0.5">
                         Assigned to {task.assignee}
                       </p>
                     </div>
 
                     {/* Priority badge */}
-                    <span className={`
-                      flex-shrink-0 px-2 py-0.5 rounded-md text-[10px] font-semibold
-                      border ${priorityBadge(task.priority)}
-                    `}>
+                    <span className={`flex-shrink-0 px-2 py-0.5 rounded-md text-[10px] font-semibold border ${priorityBadge(task.priority)}`}>
                       {task.priority}
                     </span>
                   </div>
 
                   {/* Deadline info */}
                   <div className="flex items-center justify-between mt-2.5">
-                    <span className="text-[10px] text-slate-500">
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500">
                       {new Date(task.deadline).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
                         year: "numeric",
                       })}
                     </span>
-                    <span className={`
-                      text-[10px] font-semibold
-                      ${task.daysLeft <= 1 ? "text-red-400" : task.daysLeft <= 3 ? "text-amber-400" : "text-slate-400"}
-                    `}>
+                    <span className={`text-[10px] font-semibold ${task.daysLeft <= 1 ? "text-red-500 dark:text-red-400" : task.daysLeft <= 3 ? "text-amber-500 dark:text-amber-400" : "text-slate-400 dark:text-slate-500"}`}>
                       {task.daysLeft === 0
                         ? "Due today!"
                         : task.daysLeft === 1

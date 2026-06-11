@@ -310,7 +310,7 @@ const ReportsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a] p-4 sm:p-6 lg:p-8">
+    <div className="w-full h-full bg-transparent px-4 py-8 text-slate-800 dark:text-slate-200 transition-colors duration-300">
       <div className="max-w-5xl mx-auto space-y-6">
         <div className="animate-fade-in-down">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">

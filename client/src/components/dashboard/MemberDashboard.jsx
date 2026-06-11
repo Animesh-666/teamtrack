@@ -4,13 +4,13 @@
  * Member (Team Member) dashboard view for TeamTrack.
  *
  * Displays:
- *  - Personal stat cards (assigned, completed, in-progress, score)
- *  - Today's progress ring
- *  - Assigned tasks kanban-style cards
- *  - Daily report quick-submit
- *  - Upcoming deadlines list
- *  - Personal task distribution chart
- *  - Weekly performance chart
+ * - Personal stat cards (assigned, completed, in-progress, score)
+ * - Today's progress ring
+ * - Assigned tasks kanban-style cards
+ * - Daily report quick-submit
+ * - Upcoming deadlines list
+ * - Personal task distribution chart
+ * - Weekly performance chart
  */
 
 import { useState, useEffect } from "react";
@@ -111,7 +111,7 @@ const ProgressRing = ({ value = 0, size = 120, strokeWidth = 8 }) => {
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="rgba(255,255,255,0.06)"
+          className="stroke-slate-200 dark:stroke-white/[0.06]"
           strokeWidth={strokeWidth}
         />
         {/* Progress arc */}
@@ -134,7 +134,7 @@ const ProgressRing = ({ value = 0, size = 120, strokeWidth = 8 }) => {
 
       {/* Center label */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-2xl font-bold text-white tabular-nums">{Math.round(value)}%</span>
+        <span className="text-2xl font-bold text-slate-800 dark:text-white tabular-nums">{Math.round(value)}%</span>
         <span className="text-[10px] text-slate-500 uppercase tracking-wider">Today</span>
       </div>
     </div>
@@ -159,15 +159,15 @@ const formatDeadline = (date) => {
 
 /* ── Status badge helper ──────────────────────────────────── */
 const statusConfig = {
-  "Pending":     { bg: "bg-amber-500/10", text: "text-amber-400", border: "border-amber-500/20", dot: "bg-amber-400" },
-  "In Progress": { bg: "bg-blue-500/10",  text: "text-blue-400",  border: "border-blue-500/20",  dot: "bg-blue-400" },
-  "Completed":   { bg: "bg-green-500/10", text: "text-green-400", border: "border-green-500/20", dot: "bg-green-400" },
+  "Pending":     { bg: "bg-amber-500/10", text: "text-amber-600 dark:text-amber-400", border: "border-amber-200 dark:border-amber-500/20", dot: "bg-amber-500 dark:bg-amber-400" },
+  "In Progress": { bg: "bg-blue-500/10",  text: "text-blue-600 dark:text-blue-400",   border: "border-blue-200 dark:border-blue-500/20",   dot: "bg-blue-500 dark:bg-blue-400" },
+  "Completed":   { bg: "bg-green-500/10", text: "text-green-600 dark:text-green-400", border: "border-green-200 dark:border-green-500/20", dot: "bg-green-500 dark:bg-green-400" },
 };
 
 const priorityConfig = {
-  High:   "bg-red-500/10 text-red-400 border-red-500/20",
-  Medium: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  Low:    "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  High:   "bg-red-500/10 text-red-600 dark:text-red-400 border-red-200 dark:border-red-500/20",
+  Medium: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-500/20",
+  Low:    "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-500/20",
 };
 
 /* ── Component ────────────────────────────────────────────── */
@@ -316,20 +316,20 @@ const MemberDashboard = () => {
 
   /* ── Render ─────────────────────────────────────────────── */
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in text-slate-800 dark:text-slate-200">
 
       {/* ── Greeting header ─────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">
-            Hey, <span className="text-green-400">{user?.name?.split(" ")[0]}</span> 🚀
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
+            Hey, <span className="text-green-600 dark:text-green-400">{user?.name?.split(" ")[0]}</span> 🚀
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
             Track your progress and stay productive today.
           </p>
         </div>
-        <div className="flex items-center gap-2 text-xs text-slate-500">
-          <Icons.Calendar className="w-4 h-4" />
+        <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+          <Icons.Calendar className="w-4 h-4 text-slate-400 dark:text-slate-500" />
           {new Date().toLocaleDateString("en-US", {
             weekday: "long",
             year: "numeric",
@@ -341,7 +341,6 @@ const MemberDashboard = () => {
 
       {/* ── Top row: Stats + Today's Progress Ring ───────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-        {/* Stat cards */}
         <StatCard
           icon={Icons.Tasks}
           label="Assigned Tasks"
@@ -376,55 +375,39 @@ const MemberDashboard = () => {
         {/* ── Today's Progress + Charts ──────────────────────── */}
         <div className="space-y-6">
           {/* Progress ring card */}
-          <div className="
-            p-6 rounded-2xl
-            bg-[#1e293b]/60 backdrop-blur-xl
-            border border-white/[0.06]
-            shadow-lg
-            flex flex-col items-center
-          ">
-            <h3 className="text-sm font-semibold text-white mb-4">Today's Progress</h3>
+          <div className="p-6 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] shadow-sm dark:shadow-none transition-colors duration-300 flex flex-col items-center">
+            <h3 className="text-sm font-semibold text-slate-800 dark:text-white mb-4">Today's Progress</h3>
             <ProgressRing value={todayProgress} size={140} strokeWidth={10} />
             <div className="mt-4 grid grid-cols-3 gap-4 w-full text-center">
               <div>
-                <p className="text-lg font-bold text-white">{stats.pending}</p>
-                <p className="text-[10px] text-slate-500 uppercase">Pending</p>
+                <p className="text-lg font-bold text-slate-800 dark:text-white">{stats.pending}</p>
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase">Pending</p>
               </div>
               <div>
-                <p className="text-lg font-bold text-blue-400">{stats.inProgress}</p>
-                <p className="text-[10px] text-slate-500 uppercase">Active</p>
+                <p className="text-lg font-bold text-blue-600 dark:text-blue-400">{stats.inProgress}</p>
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase">Active</p>
               </div>
               <div>
-                <p className="text-lg font-bold text-green-400">{stats.completed}</p>
-                <p className="text-[10px] text-slate-500 uppercase">Done</p>
+                <p className="text-lg font-bold text-green-600 dark:text-green-400">{stats.completed}</p>
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase">Done</p>
               </div>
             </div>
           </div>
 
           {/* Task Distribution mini chart */}
-          <div className="
-            p-5 rounded-2xl
-            bg-[#1e293b]/60 backdrop-blur-xl
-            border border-white/[0.06]
-            shadow-lg
-          ">
-            <h3 className="text-sm font-semibold text-white mb-3">My Task Distribution</h3>
+          <div className="p-5 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] shadow-sm dark:shadow-none transition-colors duration-300">
+            <h3 className="text-sm font-semibold text-slate-800 dark:text-white mb-3">My Task Distribution</h3>
             <TaskDistributionChart data={taskDistribution} />
           </div>
         </div>
 
         {/* ── Active / Recent Tasks ──────────────────────────── */}
-        <div className="
-          p-5 rounded-2xl
-          bg-[#1e293b]/60 backdrop-blur-xl
-          border border-white/[0.06]
-          shadow-lg
-        ">
+        <div className="p-5 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] shadow-sm dark:shadow-none transition-colors duration-300">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-white">My Tasks</h3>
+            <h3 className="text-sm font-semibold text-slate-800 dark:text-white">My Tasks</h3>
             <button
               onClick={() => navigate("/tasks")}
-              className="text-[10px] font-medium text-green-400 hover:text-green-300 uppercase tracking-wider transition-colors flex items-center gap-1"
+              className="text-[10px] font-medium text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300 uppercase tracking-wider transition-colors flex items-center gap-1"
             >
               View All <Icons.ArrowRight className="w-3 h-3" />
             </button>
@@ -444,27 +427,18 @@ const MemberDashboard = () => {
                   return (
                     <div
                       key={task._id}
-                      className="
-                        p-3.5 rounded-xl
-                        bg-white/[0.02] border border-white/[0.04]
-                        hover:bg-white/[0.05] hover:border-white/[0.08]
-                        transition-all duration-200 cursor-pointer
-                        group
-                      "
+                      className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/60 hover:bg-slate-100 dark:bg-white/[0.02] dark:border-white/[0.04] dark:hover:bg-white/[0.05] dark:hover:border-white/[0.08] transition-all duration-200 cursor-pointer group"
                       onClick={() => navigate(`/tasks?id=${task._id}`)}
                     >
                       {/* Header: title + priority */}
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <div className="flex items-center gap-2 min-w-0">
                           <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${sc.dot}`} />
-                          <p className="text-sm font-medium text-white truncate group-hover:text-green-400 transition-colors">
+                          <p className="text-sm font-medium text-slate-800 dark:text-white truncate group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
                             {task.title}
                           </p>
                         </div>
-                        <span className={`
-                          flex-shrink-0 px-2 py-0.5 rounded-md text-[10px] font-semibold
-                          border ${priorityConfig[task.priority] || priorityConfig.Low}
-                        `}>
+                        <span className={`flex-shrink-0 px-2 py-0.5 rounded-md text-[10px] font-semibold border ${priorityConfig[task.priority] || priorityConfig.Low}`}>
                           {task.priority}
                         </span>
                       </div>
@@ -474,20 +448,13 @@ const MemberDashboard = () => {
 
                       {/* Footer: status + deadline */}
                       <div className="flex items-center justify-between">
-                        <span className={`
-                          inline-flex items-center gap-1 px-2 py-0.5 rounded-md
-                          text-[10px] font-medium border
-                          ${sc.bg} ${sc.text} ${sc.border}
-                        `}>
+                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium border ${sc.bg} ${sc.text} ${sc.border}`}>
                           <span className={`w-1 h-1 rounded-full ${sc.dot}`} />
                           {task.status}
                         </span>
 
                         {dl && (
-                          <span className={`
-                            text-[10px] font-medium flex items-center gap-1
-                            ${dl.urgent ? "text-red-400" : "text-slate-500"}
-                          `}>
+                          <span className={`text-[10px] font-medium flex items-center gap-1 ${dl.urgent ? "text-red-500 dark:text-red-400" : "text-slate-400 dark:text-slate-500"}`}>
                             <Icons.Clock className="w-3 h-3" />
                             {dl.text}
                           </span>
@@ -504,16 +471,11 @@ const MemberDashboard = () => {
         <div className="space-y-6">
 
           {/* ── Quick Daily Report ────────────────────────────── */}
-          <div className="
-            p-5 rounded-2xl
-            bg-[#1e293b]/60 backdrop-blur-xl
-            border border-white/[0.06]
-            shadow-lg
-          ">
+          <div className="p-5 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] shadow-sm dark:shadow-none transition-colors duration-300">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-white">Daily Report</h3>
+              <h3 className="text-sm font-semibold text-slate-800 dark:text-white">Daily Report</h3>
               {todayReportSubmitted && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-green-500/10 text-green-400 text-[10px] font-medium border border-green-500/20">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-green-500/10 text-green-600 dark:text-green-400 text-[10px] font-medium border border-green-200 dark:border-green-500/20">
                   ✓ Submitted
                 </span>
               )}
@@ -522,12 +484,12 @@ const MemberDashboard = () => {
             {todayReportSubmitted ? (
               <div className="text-center py-4">
                 <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-green-500/10 flex items-center justify-center">
-                  <Icons.Completed className="w-6 h-6 text-green-400" />
+                  <Icons.Completed className="w-6 h-6 text-green-600 dark:text-green-400" />
                 </div>
-                <p className="text-sm text-slate-400">Today's report has been submitted.</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Today's report has been submitted.</p>
                 <button
                   onClick={() => navigate("/reports")}
-                  className="mt-3 text-xs text-green-400 hover:text-green-300 transition-colors underline underline-offset-2"
+                  className="mt-3 text-xs text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300 transition-colors underline underline-offset-2"
                 >
                   View all reports
                 </button>
@@ -539,18 +501,12 @@ const MemberDashboard = () => {
                   onChange={(e) => setReportText(e.target.value)}
                   placeholder="What did you work on today?"
                   rows={3}
-                  className="
-                    w-full px-3 py-2.5 rounded-xl resize-none
-                    bg-white/[0.04] border border-white/[0.08]
-                    text-sm text-slate-200 placeholder-slate-500
-                    focus:outline-none focus:border-green-500/40 focus:ring-1 focus:ring-green-500/20
-                    transition-all duration-200 scrollbar-thin
-                  "
+                  className="w-full px-3 py-2.5 rounded-xl resize-none bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-sm text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:bg-white dark:focus:bg-white/[0.06] focus:border-green-500/40 focus:ring-1 focus:ring-green-500/20 transition-all duration-200 scrollbar-thin"
                 />
 
                 <div className="flex items-center gap-3">
                   <div className="relative flex-1">
-                    <Icons.Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                    <Icons.Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
                     <input
                       type="number"
                       value={hoursWorked}
@@ -559,30 +515,14 @@ const MemberDashboard = () => {
                       min="0"
                       max="24"
                       step="0.5"
-                      className="
-                        w-full h-10 pl-9 pr-3 rounded-xl
-                        bg-white/[0.04] border border-white/[0.08]
-                        text-sm text-slate-200 placeholder-slate-500
-                        focus:outline-none focus:border-green-500/40 focus:ring-1 focus:ring-green-500/20
-                        transition-all duration-200
-                        [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
-                      "
+                      className="w-full h-10 pl-9 pr-3 rounded-xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-sm text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:bg-white dark:focus:bg-white/[0.06] focus:border-green-500/40 focus:ring-1 focus:ring-green-500/20 transition-all duration-200 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={submittingReport || !reportText.trim()}
-                    className="
-                      h-10 px-4 rounded-xl
-                      bg-gradient-to-r from-green-500 to-emerald-600
-                      text-sm font-semibold text-white
-                      shadow-lg shadow-green-500/25
-                      hover:shadow-xl hover:shadow-green-500/30
-                      disabled:opacity-50 disabled:cursor-not-allowed
-                      transition-all duration-200
-                      flex items-center gap-2
-                    "
+                    className="h-10 px-4 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 text-sm font-semibold text-white shadow-lg shadow-green-500/25 hover:shadow-xl hover:shadow-green-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2"
                   >
                     {submittingReport ? (
                       <div className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
@@ -597,49 +537,34 @@ const MemberDashboard = () => {
           </div>
 
           {/* ── Upcoming Deadlines ────────────────────────────── */}
-          <div className="
-            p-5 rounded-2xl
-            bg-[#1e293b]/60 backdrop-blur-xl
-            border border-white/[0.06]
-            shadow-lg
-          ">
+          <div className="p-5 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] shadow-sm dark:shadow-none transition-colors duration-300">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <Icons.Calendar className="w-4 h-4 text-red-400" />
-                <h3 className="text-sm font-semibold text-white">Upcoming Deadlines</h3>
+                <Icons.Calendar className="w-4 h-4 text-red-500 dark:text-red-400" />
+                <h3 className="text-sm font-semibold text-slate-800 dark:text-white">Upcoming Deadlines</h3>
               </div>
             </div>
 
             <div className="space-y-2.5">
               {upcomingDeadlines.length === 0 ? (
-                <p className="text-xs text-slate-500 text-center py-6">No upcoming deadlines 🎉</p>
+                <p className="text-xs text-slate-400 dark:text-slate-500 text-center py-6">No upcoming deadlines 🎉</p>
               ) : (
                 upcomingDeadlines.map((task) => {
                   const dl = formatDeadline(task.deadline);
                   return (
                     <div
                       key={task._id}
-                      className="
-                        flex items-center gap-3 p-2.5 rounded-xl
-                        bg-white/[0.02] border border-white/[0.04]
-                        hover:bg-white/[0.04] transition-colors cursor-pointer
-                      "
+                      className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50 border border-slate-200/60 hover:bg-slate-100 dark:bg-white/[0.02] dark:border-white/[0.04] transition-colors cursor-pointer"
                       onClick={() => navigate(`/tasks?id=${task._id}`)}
                     >
                       {/* Urgency dot */}
-                      <div className={`
-                        w-2 h-2 rounded-full flex-shrink-0
-                        ${dl.urgent ? "bg-red-400 shadow-[0_0_6px_rgba(239,68,68,0.5)]" : "bg-slate-500"}
-                      `} />
+                      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${dl.urgent ? "bg-red-500 dark:bg-red-400 shadow-[0_0_6px_rgba(239,68,68,0.3)] dark:shadow-[0_0_6px_rgba(239,68,68,0.5)]" : "bg-slate-400 dark:bg-slate-500"}`} />
 
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-medium text-white truncate">{task.title}</p>
+                        <p className="text-xs font-medium text-slate-800 dark:text-white truncate">{task.title}</p>
                       </div>
 
-                      <span className={`
-                        text-[10px] font-semibold flex-shrink-0
-                        ${dl.urgent ? "text-red-400" : "text-slate-500"}
-                      `}>
+                      <span className={`text-[10px] font-semibold flex-shrink-0 ${dl.urgent ? "text-red-500 dark:text-red-400" : "text-slate-400 dark:text-slate-500"}`}>
                         {dl.text}
                       </span>
                     </div>
@@ -650,13 +575,8 @@ const MemberDashboard = () => {
           </div>
 
           {/* ── Weekly Performance ────────────────────────────── */}
-          <div className="
-            p-5 rounded-2xl
-            bg-[#1e293b]/60 backdrop-blur-xl
-            border border-white/[0.06]
-            shadow-lg
-          ">
-            <h3 className="text-sm font-semibold text-white mb-3">My Weekly Performance</h3>
+          <div className="p-5 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] shadow-sm dark:shadow-none transition-colors duration-300">
+            <h3 className="text-sm font-semibold text-slate-800 dark:text-white mb-3">My Weekly Performance</h3>
             <WeeklyPerformanceChart data={weeklyPerformance} />
           </div>
         </div>

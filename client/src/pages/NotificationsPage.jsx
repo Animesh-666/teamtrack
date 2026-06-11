@@ -201,7 +201,7 @@ const NotificationsPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#0f172a] px-4 sm:px-6 lg:px-8 py-8 max-w-4xl mx-auto">
+    <div className="w-full h-full bg-transparent px-4 py-8 text-slate-800 dark:text-slate-200 transition-colors duration-300">
       <div className="mb-8 animate-fade-in-down">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
