@@ -92,12 +92,12 @@ const LeaderboardPage = () => {
 
   return (
     <div className="w-full h-full bg-transparent px-4 py-8 text-slate-800 dark:text-slate-200 transition-colors duration-300">
-      {/* Page Header */}
+      {/* Top Action Header Bar */}
       <div className="mb-8 animate-fade-in-down">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500/20 to-yellow-500/10 border border-amber-500/20 flex items-center justify-center shadow-md">
-              <Icons.Trophy className="w-6 h-6 text-amber-500 dark:text-amber-400" />
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500/20 to-yellow-500/10 border border-amber-500/25 flex items-center justify-center shadow-md">
+              <Icons.Trophy className="w-6 h-6 text-amber-600 dark:text-amber-400" />
             </div>
             <div>
               <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Leaderboard</h1>
@@ -112,7 +112,7 @@ const LeaderboardPage = () => {
                 <button 
                   key={period.key} 
                   onClick={() => setTimePeriod(period.key)} 
-                  className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all ${isActive ? "bg-white dark:bg-[#1e293b] text-slate-800 dark:text-white border border-slate-200 dark:border-white/[0.08] shadow-sm" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"}`}
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all ${isActive ? "bg-white dark:bg-[#1e293b] text-slate-950 dark:text-white border border-slate-200 dark:border-white/[0.08] shadow-sm" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"}`}
                 >
                   {isActive && <Icons.Calendar className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />} {period.label}
                 </button>
@@ -122,7 +122,7 @@ const LeaderboardPage = () => {
         </div>
       </div>
 
-      {/* Podium Block Cards */}
+      {/* Podium Cards Section */}
       <div className="mb-8 animate-fade-in-up">
         {!loading && topThree.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -132,28 +132,20 @@ const LeaderboardPage = () => {
               const IconComp = config.iconComponent;
 
               return (
-                <div 
-                  key={member._id || index} 
-                  className={`group relative overflow-hidden p-6 rounded-2xl bg-gradient-to-br ${config.gradient} bg-transparent border ${config.border} shadow-sm transition-all duration-300 ${index === 0 ? "md:order-2" : index === 1 ? "md:order-1" : "md:order-3"}`}
-                >
+                <div key={member._id || index} className={`group relative overflow-hidden p-6 rounded-2xl bg-gradient-to-br ${config.gradient} bg-transparent border ${config.border} shadow-sm transition-all duration-300 ${index === 0 ? "md:order-2" : index === 1 ? "md:order-1" : "md:order-3"}`}>
                   <div className="relative flex flex-col items-center text-center">
                     <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${config.badgeBg} ${config.badgeText} mb-3`}><IconComp className="w-3 h-3" />{config.label}</span>
-                    
                     {member.avatar ? (
                       <img src={member.avatar} alt={member.name} className={`w-16 h-16 rounded-2xl object-cover mb-3 ring-3 ${config.ringColor}`} />
                     ) : (
-                      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-3 ring-3 ${config.ringColor}`} style={{ background: `linear-gradient(135deg, hsl(${hue}, 60%, 45%), hsl(${hue + 30}, 50%, 35%))` }}>
-                        <span className="text-lg font-bold text-white">{getInitials(member.name)}</span>
-                      </div>
+                      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-3 ring-3 ${config.ringColor}`} style={{ background: `linear-gradient(135deg, hsl(${hue}, 60%, 45%), hsl(${hue + 30}, 50%, 35%))` }}><span className="text-lg font-bold text-white">{getInitials(member.name)}</span></div>
                     )}
-                    
-                    <h3 className="text-base font-bold text-slate-800 dark:text-white mb-0.5">{member.name}</h3>
-                    <p className="text-[11px] text-slate-400 capitalize mb-4">{member.role === "ADMIN" || member.role === "TEAM LEADER" ? "Team Leader" : "Team Member"}</p>
-                    
-                    <div className="flex items-center gap-6 mt-2">
-                      <div className="text-center"><p className={`text-lg font-bold ${config.textColor}`}>{member.completedTasks || 0}</p><p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-wider">Tasks</p></div>
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white mb-0.5">{member.name}</h3>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 capitalize mb-4">{member.role === "admin" ? "Team Leader" : "Team Member"}</p>
+                    <div className="flex items-center gap-6 mt-4">
+                      <div className="text-center"><p className={`text-lg font-bold text-slate-900 dark:text-white`}>{member.completedTasks || 0}</p><p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-wider">Tasks</p></div>
                       <div className="w-px h-8 bg-slate-200 dark:bg-white/[0.08]" />
-                      <div className="text-center"><p className={`text-lg font-bold ${config.textColor}`}>{member.productivityScore || 0}%</p><p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-wider">Score</p></div>
+                      <div className="text-center"><p className={`text-lg font-bold text-slate-900 dark:text-white`}>{member.productivityScore || 0}%</p><p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-wider">Score</p></div>
                     </div>
                   </div>
                 </div>
@@ -163,7 +155,7 @@ const LeaderboardPage = () => {
         )}
       </div>
 
-      {/* Summary Metrics Row */}
+      {/* Backup Summary Rows */}
       <div className="mb-8 animate-fade-in-up">
         {!loading && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -173,11 +165,9 @@ const LeaderboardPage = () => {
               { label: "Tasks Completed", value: totalTasks, icon: Icons.TaskCheck, c: "text-purple-600 dark:text-purple-400" }
             ].map((box, idx) => (
               <div key={idx} className="p-5 rounded-2xl bg-transparent border border-slate-200 dark:border-white/[0.06] shadow-sm flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/[0.04] flex items-center justify-center">
-                  <box.icon className={`w-5 h-5 ${box.c}`} />
-                </div>
+                <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/[0.04] flex items-center justify-center"><box.icon className={`w-5 h-5 ${box.c}`} /></div>
                 <div>
-                  <p className="text-2xl font-bold text-slate-800 dark:text-white leading-none mb-1">{box.value}</p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-white leading-none mb-1">{box.value}</p>
                   <p className="text-xs text-slate-400 dark:text-slate-500 font-medium uppercase tracking-wider">{box.label}</p>
                 </div>
               </div>
@@ -186,7 +176,7 @@ const LeaderboardPage = () => {
         )}
       </div>
 
-      {/* Main Leaderboard Table Container */}
+      {/* Table grid layout node */}
       <div className="animate-fade-in-up">
         <LeaderboardTable members={members} loading={loading} />
       </div>

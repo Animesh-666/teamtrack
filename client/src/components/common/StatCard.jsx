@@ -4,12 +4,12 @@
  * Dashboard statistic card with icon, value, label, and trend.
  *
  * Features:
- *  - Animated counting effect on value change
- *  - Icon with colored glow background
- *  - Trend indicator (up / down / neutral)
- *  - Glassmorphism card styling
- *  - Hover lift animation
- *  - Customizable accent color
+ * - Animated counting effect on value change
+ * - Icon with colored glow background
+ * - Trend indicator (up / down / neutral)
+ * - Glassmorphism card styling
+ * - Hover lift animation
+ * - Customizable accent color
  */
 
 import { useState, useEffect, useRef } from "react";
@@ -136,7 +136,7 @@ const StatCard = ({
 
           {/* Value */}
           <div className="flex items-baseline gap-1.5">
-            <span className="text-3xl font-bold text-white tabular-nums tracking-tight">
+            <span className="text-3xl font-bold text-slate-900 dark:text-white tabular-nums tracking-tight">
               {displayValue}
             </span>
             {suffix && (
